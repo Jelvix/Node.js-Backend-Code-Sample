@@ -1,0 +1,42 @@
+{
+  "name": "football",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": {},
+  "license": "MIT",
+  "scripts": {
+    "start": "better-npm-run build:dev",
+    "build:prod": "better-npm-run build:prod",
+    "doc": "apidoc -i components/"
+  },
+  "betterScripts": {
+    "build:dev": {
+      "command": "node server.js",
+      "env": {
+        "mode": "dev",
+        "port": 3000,
+        "secret": "sdklfui4ew6r347y34b"
+      }
+    },
+    "build:prod": {
+      "command": "sudo pm2 start server.js",
+      "env": {
+        "mode": "prod",
+        "port": 80,
+        "secret": "dfsdmf348y345h34"
+      }
+    }
+  },
+  "dependencies": {
+    "apidoc": "^0.17.5",
+    "better-npm-run": "^0.0.15",
+    "body-parser": "^1.17.1",
+    "cors": "^2.8.3",
+    "express": "^4.15.2",
+    "express-validator": "^3.2.0",
+    "jsonwebtoken": "^7.4.0",
+    "md5": "^2.2.1",
+    "pg": "^6.1.5",
+    "sequelize": "^3.30.4"
+  }
+}
