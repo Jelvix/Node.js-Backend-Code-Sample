@@ -11,7 +11,7 @@
   },
   "betterScripts": {
     "build:dev": {
-      "command": "pm2 start server.js",
+      "command": "pm2 restart server.js",
       "env": {
         "mode": "dev",
         "port": 4001,
