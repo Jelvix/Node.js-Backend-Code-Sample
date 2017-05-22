@@ -20,7 +20,7 @@
       }
     },
     "build:stage": {
-      "command": "./start-server",
+      "command": "./start-server.sh",
       "env": {
         "mode": "stage",
         "port": 4001,
