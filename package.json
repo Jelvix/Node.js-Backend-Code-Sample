@@ -20,7 +20,7 @@
       }
     },
     "build:stage": {
-      "command": "pm2 stop server.js && pm2 start server.js",
+      "command": "./start-server",
       "env": {
         "mode": "stage",
         "port": 4001,
