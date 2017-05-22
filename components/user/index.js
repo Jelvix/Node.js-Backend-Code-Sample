@@ -137,4 +137,38 @@ module.exports = app => {
    *  }
    */
   app.get('/me/command', AuthController.authValidator(), CommandController.myCommands);
+
+
+  /**
+   * @api {get} /users Get users list
+   * @apiName GetUsers
+   * @apiGroup User
+   * @apiPermission moderator
+   *
+   * @apiHeader {String} X-Auth-Token User auth token.
+   *
+   * @apiParam {Int} offset=0 Start index of the results array.
+   * @apiParam {Int} limit=30 Size of the results array.
+   *
+   * @apiSuccess {Array} user Users list.
+   * @apiSuccess {Int} user.id Id.
+   * @apiSuccess {String} user.name Name.
+   * @apiSuccess {String} user.email Email.
+   * @apiSuccess {Int} user.role Role.
+
+   * @apiSuccessExample Success-Response:
+   *  HTTP/1.1 200 OK
+   *  {
+   *    "users": [user]
+   *  }
+   *
+   * @apiError {String} reason Error reason.
+   *
+   * @apiErrorExample Error-Response:
+   *  HTTP/1.1 400 Bad Request
+   *  {
+   *    "reason": "DB error."
+   *  }
+   */
+  app.get('/users', AuthController.authValidator(1), UserController.getList);
 };

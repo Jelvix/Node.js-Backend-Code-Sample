@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 const md5 = require('md5');
 
 const UserModel = require('./user.model');
-const ValidatorUtils =  require('../../utils/validator');
-const CommonUtils =  require('../../utils/common');
+const ValidatorUtils = require('../../utils/validator');
+const CommonUtils = require('../../utils/common');
 
 class User {
   static async registrationValidator(req, res, next) {
@@ -11,6 +11,23 @@ class User {
     req.checkBody('email', 'Email not valid.').notEmpty().isEmail();
     req.checkBody('password', 'Password not valid').notEmpty();
     return await ValidatorUtils.errorMapped(req, res, next);
+  }
+
+  static async getList(req, res) {
+    const options = {
+      offset: +req.query.offset || 0,
+      limit: +req.query.limit || 30,
+      attributes: {
+        exclude: ['updatedAt', 'password']
+      }
+    };
+
+    try {
+      const users = await UserModel.findAll(options);
+      return res.status(200).json({users});
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
   }
 
   static async registration(req, res) {
@@ -23,7 +40,7 @@ class User {
         }
       });
       if (userOld) {
-        throw new Error('User already exists.')
+        throw new Error('User already exists.');
       }
       const user = await UserModel.create({
         name,

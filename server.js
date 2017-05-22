@@ -7,6 +7,7 @@ const db = require('./config/db');
 const router = require('./config/router');
 const app = express();
 
+app.use('/doc', express.static('./doc'));
 db.sync();
 app.use(expressValidator());
 app.use(bodyParser.urlencoded({extended: false}));

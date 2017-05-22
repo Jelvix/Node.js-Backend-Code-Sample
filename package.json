@@ -14,7 +14,7 @@
       "command": "node server.js",
       "env": {
         "mode": "dev",
-        "port": 3000,
+        "port": 4001,
         "secret": "sdklfui4ew6r347y34b"
       }
     },
