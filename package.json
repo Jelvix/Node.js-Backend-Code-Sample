@@ -6,14 +6,23 @@
   "license": "MIT",
   "scripts": {
     "start": "better-npm-run build:dev",
+    "build:stage": "better-npm-run build:stage",
     "build:prod": "better-npm-run build:prod",
     "doc": "apidoc -i components/"
   },
   "betterScripts": {
     "build:dev": {
-      "command": "pm2 start server.js -f",
+      "command": "node server.js",
       "env": {
         "mode": "dev",
+        "port": 3000,
+        "secret": "sdklfui4ew6r347y34b"
+      }
+    },
+    "build:stage": {
+      "command": "pm2 stop server.js && pm2 start server.js",
+      "env": {
+        "mode": "stage",
         "port": 4001,
         "secret": "sdklfui4ew6r347y34b"
       }
