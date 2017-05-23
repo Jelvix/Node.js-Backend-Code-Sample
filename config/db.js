@@ -1,15 +1,15 @@
 const Sequelize = require('sequelize');
 const sequelizeInst = new Sequelize('postgres', 'postgres', 'postgres', {
   host: 'localhost',
-  dialect: 'postgres',
+  dialect: 'postgres'
 });
 
 sequelizeInst
   .authenticate()
-  .then(function() {
+  .then(() => {
     console.log('Connection has been established successfully.');
   })
-  .catch(function (err) {
+  .catch((err) => {
     console.log('Unable to connect to the database:', err);
   });
 
