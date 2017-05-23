@@ -200,5 +200,26 @@ module.exports = app => {
    *    "reason": "DB error."
    *  }
    */
-  app.get('/users/:id', AuthController.authValidator(1), UserController.getOneValidator, UserController.getOne);
+  app.get('/users/:id', AuthController.authValidator(1), UserController.getByIdValidator, UserController.getOneById);
+
+  /**
+   * @api {delete} /users/:id Delete user
+   * @apiName DeleteUser
+   * @apiGroup User
+   * @apiPermission moderator
+   *
+   * @apiHeader {String} X-Auth-Token User auth token.
+   *
+   * @apiSuccessExample Success-Response:
+   *  HTTP/1.1 200 OK
+   *
+   * @apiError {String} reason Error reason.
+   *
+   * @apiErrorExample Error-Response:
+   *  HTTP/1.1 400 Bad Request
+   *  {
+   *    "reason": "DB error."
+   *  }
+   */
+  app.delete('/users/:id', AuthController.authValidator(1), UserController.getByIdValidator, UserController.deleteById);
 };
