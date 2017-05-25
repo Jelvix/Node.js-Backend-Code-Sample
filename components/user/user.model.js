@@ -14,11 +14,7 @@ const User = db.define('user', {
   role: {
     type: Sequelize.INTEGER,
     defaultValue: 0
-  },
-  deleted: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false
   }
-});
+}, {paranoid: true});
 
 module.exports = User;

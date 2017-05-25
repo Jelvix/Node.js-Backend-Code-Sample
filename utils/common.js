@@ -1,6 +1,6 @@
 class CommonUtils {
-  static catchError(res, err) {
-    return res.status(400).json({
+  static catchError(res, err, code = 400) {
+    return res.status(code).json({
       reason: err.message || 'DB error'
     });
   }

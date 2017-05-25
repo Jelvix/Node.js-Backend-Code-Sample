@@ -27,7 +27,7 @@ class Auth {
       }
       return res.json({
         id: user.id,
-        token: jwt.sign({email, password: passwordMd5}, process.env.secret)
+        token: jwt.sign({id: user.id, email}, process.env.secret)
       });
     } catch (err) {
       return CommonUtils.catchError(res, err);
@@ -36,7 +36,7 @@ class Auth {
 
   static authValidator(role = 0) {
     return async (req, res, next) => {
-      let token = req.body.token || req.query.token || req.headers['x-auth-token'];
+      const token = req.body.token || req.query.token || req.headers['x-auth-token'];
 
       if (token) {
         return jwt.verify(token, process.env.secret, async (err, decoded) => {
@@ -46,12 +46,7 @@ class Auth {
             });
           }
 
-          req.user = await UserModel.find({
-            when: {
-              id: decoded._id
-            }
-          });
-
+          req.user = await UserModel.findById(decoded.id, {raw: true});
           if (!req.user) {
             return res.status(401).json({
               reason: 'Failed to authenticate token.'
@@ -71,7 +66,7 @@ class Auth {
       return res.status(400).json({
         reason: 'No token provided.'
       });
-    }
+    };
   }
 }
 
