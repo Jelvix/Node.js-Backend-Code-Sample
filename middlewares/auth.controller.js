@@ -4,6 +4,7 @@ const db = require('../config/db');
 const UserModel = require('./../components/user/user.model.js')(db);
 const ValidatorUtils = require('../utils/validator');
 const CommonUtils = require('../utils/common');
+const {ADMIN_ROLE} = require('../config/role.constatnts.js');
 
 class Auth {
   static async loginValidator(req, res, next) {
@@ -71,8 +72,7 @@ class Auth {
   }
 
   static isAdminPermission(req, res, next) {
-    const role = 1;
-    if (req.user.role < role) {
+    if (req.user.role < ADMIN_ROLE) {
       return res.status(401).json({
         reason: 'Permission denied.'
       });
