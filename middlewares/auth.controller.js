@@ -54,9 +54,6 @@ class Auth {
   }
 
   static isUserPermission(req, res, next) {
-    if (req.url === '/login' || req.url === '/registration') {
-      return next();
-    }
     const token = req.body.token || req.query.token || req.headers['x-auth-token'];
     if (!token) {
       return res.status(400).json({
@@ -74,7 +71,8 @@ class Auth {
   }
 
   static isAdminPermission(req, res, next) {
-    if (req.user.role !== 'admin') {
+    const role = 1;
+    if (req.user.role < role) {
       return res.status(401).json({
         reason: 'Permission denied.'
       });

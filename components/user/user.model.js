@@ -12,8 +12,8 @@ module.exports = db => {
       type: Sequelize.STRING
     },
     role: {
-      type: Sequelize.STRING,
-      defaultValue: 'user'
+      type: Sequelize.INTEGER,
+      defaultValue: 0
     }
   }, {paranoid: true});
 };

@@ -84,7 +84,7 @@ class User {
   static async updateUserValidator(req, res, next) {
     req.checkBody('name', 'Name must not be empty.').notEmpty();
     req.checkBody('email', 'Email is not valid.').notEmpty().isEmail();
-    req.checkBody('role', 'Role is not valid.').notEmpty();
+    req.checkBody('role', 'Role is not valid.').notEmpty().isInt();
     req.checkParams('id', 'Id is not valid').isInt();
     return await ValidatorUtils.errorMapped(req, res, next);
   }
