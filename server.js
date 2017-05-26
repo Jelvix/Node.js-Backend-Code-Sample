@@ -16,8 +16,6 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use(AuthController.authValidator());
-app.use(AuthController.isUserPermission);
-app.use('/admin/*', AuthController.isAdminPermission);
 router(app);
 const port = process.env.port || 3000;
 app.listen(port, () => console.log(`Run to port ${port}`));
