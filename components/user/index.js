@@ -1,6 +1,6 @@
 const UserController = require('./user.controller');
 const CommandController = require('./command.controller');
-const AuthController = require('./auth.controller');
+const AuthController = require('./../../middlewares/auth.controller.js');
 
 module.exports = app => {
   /**
@@ -60,10 +60,10 @@ module.exports = app => {
   app.post('/registration', UserController.registrationValidator, UserController.registration);
 
   /**
-   * @api {post} /command Create new command
+   * @api {post} /admin/command Create new command
    * @apiName CreateCommand
    * @apiGroup Command
-   * @apiPermission moderator
+   * @apiPermission admin
    *
    * @apiHeader {String} X-Auth-Token User auth token.
    *
@@ -85,13 +85,13 @@ module.exports = app => {
    *    "reason": "User don't exists."
    *  }
    */
-  app.post('/command', AuthController.authValidator(1), CommandController.addValidator, CommandController.add);
+  app.post('/admin/command', CommandController.addValidator, CommandController.add);
 
   /**
-   * @api {delete} /command/:id Remove command
+   * @api {delete} /admin/command/:id Remove command
    * @apiName RemoveCommand
    * @apiGroup Command
-   * @apiPermission moderator
+   * @apiPermission admin
    *
    * @apiHeader {String} X-Auth-Token User auth token.
    *
@@ -108,7 +108,7 @@ module.exports = app => {
    *    "reason": "Command don't exists."
    *  }
    */
-  app.delete('/command/:id', AuthController.authValidator(1), CommandController.deleteValidator, CommandController.deleteById);
+  app.delete('/admin/command/:id', CommandController.deleteValidator, CommandController.deleteById);
 
   /**
    * @api {get} /me/command Get my commands
@@ -140,10 +140,10 @@ module.exports = app => {
 
 
   /**
-   * @api {get} /users Get users list
+   * @api {get} /admin/users Get users list
    * @apiName GetUsers
    * @apiGroup User
-   * @apiPermission moderator
+   * @apiPermission admin
    *
    * @apiHeader {String} X-Auth-Token User auth token.
    *
@@ -170,13 +170,13 @@ module.exports = app => {
    *    "reason": "DB error."
    *  }
    */
-  app.get('/users', AuthController.authValidator(1), UserController.getList);
+  app.get('/admin/users', UserController.getList);
 
   /**
    * @api {get} /users/:id Get user
    * @apiName GetUser
    * @apiGroup User
-   * @apiPermission moderator
+   * @apiPermission admin
    *
    * @apiHeader {String} X-Auth-Token User auth token.
    *
@@ -202,13 +202,13 @@ module.exports = app => {
    *    "reason": "DB error."
    *  }
    */
-  app.get('/users/:id', AuthController.authValidator(1), UserController.getByIdValidator, UserController.getOneById);
+  app.get('/admin/users/:id', UserController.getByIdValidator, UserController.getOneById);
 
   /**
-   * @api {delete} /users/:id Delete user
+   * @api {delete} /admin/users/:id Delete user
    * @apiName DeleteUser
    * @apiGroup User
-   * @apiPermission moderator
+   * @apiPermission admin
    *
    * @apiHeader {String} X-Auth-Token User auth token.
    *
@@ -225,14 +225,14 @@ module.exports = app => {
    *    "reason": "DB error."
    *  }
    */
-  app.delete('/users/:id', AuthController.authValidator(1), UserController.getByIdValidator, UserController.deleteById);
+  app.delete('/admin/users/:id', UserController.getByIdValidator, UserController.deleteById);
 
 
   /**
-   * @api {put} /users/:id Update user
+   * @api {put} /admin/users/:id Update user
    * @apiName UpdateUser
    * @apiGroup User
-   * @apiPermission moderator
+   * @apiPermission admin
    *
    * @apiHeader {String} X-Auth-Token User auth token.
    *
@@ -261,7 +261,7 @@ module.exports = app => {
    *    "reason": "DB error."
    *  }
    */
-  app.put('/users/:id', AuthController.authValidator(1), UserController.updateUserValidator, UserController.updateUser);
+  app.put('/admin/users/:id', UserController.updateUserValidator, UserController.updateUser);
 
   /**
    * @api {put} /me/email Update email
@@ -294,7 +294,7 @@ module.exports = app => {
    *    "reason": "DB error."
    *  }
    */
-  app.put('/me/email', AuthController.authValidator(0), UserController.updateEmailValidator, UserController.updateEmail);
+  app.put('/me/email', UserController.updateEmailValidator, UserController.updateEmail);
 
   /**
    * @api {put} /me/name Update name
@@ -326,7 +326,7 @@ module.exports = app => {
    *    "reason": "DB error."
    *  }
    */
-  app.put('/me/name', AuthController.authValidator(0), UserController.updateNameValidator, UserController.updateMame);
+  app.put('/me/name', UserController.updateNameValidator, UserController.updateMame);
 
 
   /**
@@ -356,5 +356,5 @@ module.exports = app => {
    *    "reason": "DB error."
    *  }
    */
-  app.put('/me/password', AuthController.authValidator(0), UserController.updatePasswordValidator, UserController.updatePassword);
+  app.put('/me/password', UserController.updatePasswordValidator, UserController.updatePassword);
 };

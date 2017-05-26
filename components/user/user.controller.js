@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken');
 const md5 = require('md5');
-
-const UserModel = require('./user.model');
+const db = require('../../config/db');
+const UserModel = require('./user.model')(db);
 const ValidatorUtils = require('../../utils/validator');
 const CommonUtils = require('../../utils/common');
+const {NotFoundError, BadRequestError} = require('./../../utils/erros.model.js');
 
 class User {
   static async registrationValidator(req, res, next) {
@@ -15,7 +16,6 @@ class User {
 
   static async registration(req, res) {
     const {name, email, password} = req.body;
-    const passwordMd5 = md5(password);
     try {
       const existingUser = await UserModel.find({
         where: {
@@ -23,8 +23,10 @@ class User {
         }
       });
       if (existingUser) {
-        throw new Error('User already exists.');
+        throw new BadRequestError('User already exists.');
       }
+
+      const passwordMd5 = md5(password);
       const user = await UserModel.create({
         name,
         email,
@@ -49,11 +51,9 @@ class User {
     try {
       const user = await UserModel.destroy({where: {id}});
       if (!user) {
-        return res.status(404).json({
-          reason: `User doesn't exist.`
-        });
+        throw new NotFoundError(`User doesn't exist.`);
       }
-      return res.status(200).send({reason: `User "${id}" has been deleted successfully.`});
+      return res.status(204).send();
     } catch (err) {
       return CommonUtils.catchError(res, err);
     }
@@ -73,9 +73,7 @@ class User {
     try {
       const user = await UserModel.findOne(options);
       if (!user) {
-        return res.status(404).json({
-          reason: `User doesn't exist.`
-        });
+        throw new NotFoundError(`User doesn't exist.`);
       }
       return res.status(200).json({user});
     } catch (err) {
@@ -86,7 +84,7 @@ class User {
   static async updateUserValidator(req, res, next) {
     req.checkBody('name', 'Name must not be empty.').notEmpty();
     req.checkBody('email', 'Email is not valid.').notEmpty().isEmail();
-    req.checkBody('role', 'Role is not valid.').notEmpty().isInt();
+    req.checkBody('role', 'Role is not valid.').notEmpty();
     req.checkParams('id', 'Id is not valid').isInt();
     return await ValidatorUtils.errorMapped(req, res, next);
   }
@@ -102,10 +100,10 @@ class User {
         }
       });
       if (existingUser) {
-        throw new Error(`User with email: "${email}" already exist.`);
+        throw new BadRequestError(`User with email: "${email}" already exist.`);
       }
 
-      return User.updateUserWithResponse({name, email, role}, req, res);
+      return User.updateUserWithResponse({name, email, role}, id, res);
     } catch (err) {
       return CommonUtils.catchError(res, err);
     }
@@ -120,7 +118,6 @@ class User {
 
   static async updateEmail(req, res) {
     const {email, password} = req.body;
-    const passwordMd5 = md5(password);
 
     try {
       const existingUser = await UserModel.find({
@@ -130,13 +127,15 @@ class User {
         }
       });
       if (existingUser) {
-        throw new Error(`User with email: "${email}" already exists.`);
-      }
-      if (req.user.password !== passwordMd5) {
-        throw new Error(`Passwords do not match.`);
+        throw new BadRequestError(`User with email: "${email}" already exists.`);
       }
 
-      return await User.updateUserWithResponse({email}, req, res);
+      const passwordMd5 = md5(password);
+      if (req.user.password !== passwordMd5) {
+        throw new BadRequestError(`Passwords do not match.`);
+      }
+
+      return await User.updateUserWithResponse({email}, req.user.id, res);
     } catch (err) {
       return CommonUtils.catchError(res, err);
     }
@@ -151,7 +150,7 @@ class User {
   static async updateMame(req, res) {
     const name = req.body.name;
     try {
-      return await User.updateUserWithResponse({name}, req, res);
+      return await User.updateUserWithResponse({name}, req.user.id, res);
     }
     catch (err) {
       return CommonUtils.catchError(res, err);
@@ -168,38 +167,35 @@ class User {
   static async updatePassword(req, res) {
     const {newPassword, oldPassword} = req.body;
     const oldPasswordMd5 = md5(oldPassword);
-    const newPasswordMd5 = md5(newPassword);
 
     try {
       if (oldPasswordMd5 !== req.user.password) {
-        throw new Error('Old password is not correct.');
+        throw new BadRequestError('Old password is not correct.');
       }
 
+      const newPasswordMd5 = md5(newPassword);
       const result = await UserModel.update({password: newPasswordMd5}, {where: {id: req.user.id}});
       if (!result[0]) {
-        return res.status(404).json({
-          reason: `User doesn't exist.`
-        });
+        throw new NotFoundError(`User doesn't exist.`);
       }
-      return res.status(200).json({reason: 'Password has been changed successfully.'});
+      return res.status(204).json();
     } catch (err) {
-      return CommonUtils.catchError(req, err);
+      return CommonUtils.catchError(res, err);
     }
   }
 
-  static async updateUserWithResponse(data, req, res) {
-    const currentUser = await UserModel.findById(req.user.id, {
+  static async updateUserWithResponse(data, id, res) {
+    await UserModel.update(data, {where : {id}});
+
+    const user = await UserModel.findById(id, {
       attributes: {
         exclude: ['updatedAt', 'password', 'createdAt', 'deletedAt']
       }
     });
-    if (!currentUser) {
-      return res.status(404).json({
-        reason: `User doesn't exist.`
-      });
+    if (!user) {
+      throw new NotFoundError(`User doesn't exist.`);
     }
-    const user = await currentUser.update(data);
-    delete user.dataValues.updatedAt;
+
     return res.status(200).json({user});
   }
 
