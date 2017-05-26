@@ -1,24 +1,19 @@
 const Sequelize = require('sequelize');
-const db = require('../../config/db');
 
-const User = db.define('user', {
-  name: {
-    type: Sequelize.STRING
-  },
-  email: {
-    type: Sequelize.STRING
-  },
-  password: {
-    type: Sequelize.STRING
-  },
-  role: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0
-  },
-  deleted: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false
-  }
-});
-
-module.exports = User;
+module.exports = db => {
+  return db.define('user', {
+    name: {
+      type: Sequelize.STRING
+    },
+    email: {
+      type: Sequelize.STRING
+    },
+    password: {
+      type: Sequelize.STRING
+    },
+    role: {
+      type: Sequelize.STRING,
+      defaultValue: 'user'
+    }
+  }, {paranoid: true});
+};
