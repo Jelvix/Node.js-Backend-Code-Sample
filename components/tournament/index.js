@@ -1,6 +1,6 @@
 const TournamentController = require('./tournament.controller');
 const MatchController = require('./match.controller');
-const AuthController = require('../../middlewares/auth.controller.js');
+const AuthController = require('../auth/auth.controller.js');
 
 module.exports = (app) => {
   /**

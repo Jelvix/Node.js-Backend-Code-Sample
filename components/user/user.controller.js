@@ -7,40 +7,6 @@ const CommonUtils = require('../../utils/common');
 const {NotFoundError, BadRequestError} = require('./../../utils/erros.model.js');
 
 class User {
-  static async registrationValidator(req, res, next) {
-    req.checkBody('name', 'Name must not be empty.').notEmpty();
-    req.checkBody('email', 'Email is not valid.').notEmpty().isEmail();
-    req.checkBody('password', 'Password is not valid').notEmpty();
-    return await ValidatorUtils.errorMapped(req, res, next);
-  }
-
-  static async registration(req, res) {
-    const {name, email, password} = req.body;
-    try {
-      const existingUser = await UserModel.find({
-        where: {
-          email
-        }
-      });
-      if (existingUser) {
-        throw new BadRequestError('User already exists.');
-      }
-
-      const passwordMd5 = md5(password);
-      const user = await UserModel.create({
-        name,
-        email,
-        password: passwordMd5
-      });
-      return res.json({
-        id: user.id,
-        token: jwt.sign({email, id: user.id}, process.env.secret)
-      });
-    } catch (err) {
-      return CommonUtils.catchError(res, err);
-    }
-  }
-
   static async getByIdValidator(req, res, next) {
     req.checkParams('id', 'Id is not valid.').isInt();
     return await ValidatorUtils.errorMapped(req, res, next);

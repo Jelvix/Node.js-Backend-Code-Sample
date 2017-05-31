@@ -1,0 +1,128 @@
+const UserController = require('./user.controller');
+const CommandController = require('./command.controller');
+const app = require('express')();
+
+/**
+ * @api {get} /me/command Get my commands
+ * @apiName MyCommands
+ * @apiGroup Command
+ * @apiPermission user
+ *
+ * @apiHeader {String} X-Auth-Token User auth token.
+ *
+ * @apiSuccess {Array} command Commands list.
+ * @apiSuccess {Int} commands.id Id.
+ * @apiSuccess {String} commands.title Title.
+
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *  {
+   *    "commands": [command]
+   *  }
+ *
+ * @apiError {String} reason Error reason.
+ *
+ * @apiErrorExample Error-Response:
+ *  HTTP/1.1 400 Bad Request
+ *  {
+   *    "reason": "DB error."
+   *  }
+ */
+app.get('/commands', CommandController.myCommands);
+
+/**
+ * @api {put} /me/name Update name
+ * @apiName UpdateName
+ * @apiGroup User
+ * @apiPermission user
+ *
+ * @apiHeader {String} X-Auth-Token User auth token.
+ *
+ * @apiParam {String} name new Name.
+ *
+ * @apiSuccess {Object} user User.
+ * @apiSuccess {Int} user.id Id.
+ * @apiSuccess {String} user.name Name.
+ * @apiSuccess {String} user.email Email.
+ * @apiSuccess {Int} user.role Role.
+ *
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *  {
+   *   user: user
+   *  }
+ *
+ * @apiError {String} reason Error reason.
+ *
+ * @apiErrorExample Error-Response:
+ *  HTTP/1.1 400 Bad Request
+ *  {
+   *    "reason": "DB error."
+   *  }
+ */
+app.put('/name', UserController.updateNameValidator, UserController.updateMame);
+
+
+/**
+ * @api {put} /me/password Update password
+ * @apiName UpdatePassword
+ * @apiGroup User
+ * @apiPermission user
+ *
+ * @apiHeader {String} X-Auth-Token User auth token.
+ *
+ * @apiParam {String} oldPassword Old password.
+ * @apiParam {String} newPassword New password.
+ *
+ * @apiSuccess {String} reason Success message.
+ *
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *  {
+   *   reason: password has been updated successfully.
+   *  }
+ *
+ * @apiError {String} reason Error reason.
+ *
+ * @apiErrorExample Error-Response:
+ *  HTTP/1.1 400 Bad Request
+ *  {
+   *    "reason": "DB error."
+   *  }
+ */
+app.put('/password', UserController.updatePasswordValidator, UserController.updatePassword);
+
+/**
+ * @api {put} /me/email Update email
+ * @apiName UpdateEmail
+ * @apiGroup User
+ * @apiPermission user
+ *
+ * @apiHeader {String} X-Auth-Token User auth token.
+ *
+ * @apiParam {String} email new Email.
+ * @apiParam {String} password Password.
+ *
+ * @apiSuccess {Object} user User.
+ * @apiSuccess {Int} user.id Id.
+ * @apiSuccess {String} user.name Name.
+ * @apiSuccess {String} user.email Email.
+ * @apiSuccess {Int} user.role Role.
+ *
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *  {
+   *   user: user
+   *  }
+ *
+ * @apiError {String} reason Error reason.
+ *
+ * @apiErrorExample Error-Response:
+ *  HTTP/1.1 400 Bad Request
+ *  {
+   *    "reason": "DB error."
+   *  }
+ */
+app.put('/email', UserController.updateEmailValidator, UserController.updateEmail);
+
+module.exports = app;
