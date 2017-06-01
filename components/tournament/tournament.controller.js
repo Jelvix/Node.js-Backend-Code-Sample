@@ -40,7 +40,7 @@ class Tournament {
     try {
       const tournament = await TournamentModel.destroy({where: {id}});
       if (!tournament) {
-        throw new NotFoundError(`User doesn't exist.`);
+        throw new NotFoundError(`Tournament doesn't exist.`);
       }
       return res.status(204).send();
     } catch (err) {
