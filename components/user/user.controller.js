@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const md5 = require('md5');
 const db = require('../../config/db');
 const UserModel = require('./user.model')(db);
@@ -151,7 +150,7 @@ class User {
   }
 
   static async updateUserWithResponse(data, id, res) {
-    await UserModel.update(data, {where : {id}});
+    await UserModel.update(data, {where: {id}});
 
     const user = await UserModel.findById(id, {
       attributes: {
@@ -176,6 +175,10 @@ class User {
     };
 
     try {
+      if (Number.isNaN(options.offset) || Number.isNaN(options.limit)) {
+        throw new BadRequestError('Invalid request options.');
+      }
+
       const users = await UserModel.findAll(options);
       return res.status(200).json({users});
     } catch (err) {
