@@ -164,6 +164,12 @@ class User {
     return res.status(200).json({user});
   }
 
+  static async limitOffsetValidator(req, res, next) {
+    req.checkQuery('limit', 'Limit is not a number.').optional().isInt();
+    req.checkQuery('offset', 'Limit is not a number.').optional().isInt();
+    return await ValidatorUtils.errorMapped(req, res, next);
+  }
+
   static async getList(req, res) {
     const options = {
       offset: +req.query.offset || 0,
@@ -175,10 +181,6 @@ class User {
     };
 
     try {
-      if (Number.isNaN(options.offset) || Number.isNaN(options.limit)) {
-        throw new BadRequestError('Invalid request options.');
-      }
-
       const users = await UserModel.findAll(options);
       return res.status(200).json({users});
     } catch (err) {

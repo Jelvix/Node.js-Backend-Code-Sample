@@ -32,6 +32,6 @@ const app = require('express')();
    *    "reason": "Error db."
    *  }
  */
-app.get('/tournaments', TournamentController.getList);
+app.get('/tournaments', TournamentController.limitOffsetValidator, TournamentController.getList);
 
 module.exports = app;

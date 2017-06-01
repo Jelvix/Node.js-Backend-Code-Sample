@@ -33,7 +33,7 @@ const app = require('express')();
    *    "reason": "DB error."
    *  }
  */
-app.get('/users', UserController.getList);
+app.get('/users', UserController.limitOffsetValidator, UserController.getList);
 
 /**
  * @api {post} /admin/command Create new command

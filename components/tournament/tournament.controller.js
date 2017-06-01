@@ -69,6 +69,12 @@ class Tournament {
     }
   }
 
+  static async limitOffsetValidator(req, res, next) {
+    req.checkQuery('limit', 'Limit is not a number.').optional().isInt();
+    req.checkQuery('offset', 'Limit is not a number.').optional().isInt();
+    return await ValidatorUtils.errorMapped(req, res, next);
+  }
+
   static async getList(req, res) {
     let options = {
       offset: +req.query.offset || 0,
@@ -79,10 +85,6 @@ class Tournament {
     };
 
     try {
-      if (Number.isNaN(options.offset) || Number.isNaN(options.limit)) {
-        throw new BadRequestError('Invalid request options.');
-      }
-
       const tournaments = await TournamentModel.findAll(options);
       return res.status(200).json({tournaments});
     } catch (err) {
