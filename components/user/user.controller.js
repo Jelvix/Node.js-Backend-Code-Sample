@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const md5 = require('md5');
 const db = require('../../config/db');
 const UserModel = require('./user.model')(db);
@@ -151,7 +150,7 @@ class User {
   }
 
   static async updateUserWithResponse(data, id, res) {
-    await UserModel.update(data, {where : {id}});
+    await UserModel.update(data, {where: {id}});
 
     const user = await UserModel.findById(id, {
       attributes: {
@@ -163,6 +162,12 @@ class User {
     }
 
     return res.status(200).json({user});
+  }
+
+  static async limitOffsetValidator(req, res, next) {
+    req.checkQuery('limit', 'Limit is not a number.').optional().isInt();
+    req.checkQuery('offset', 'Limit is not a number.').optional().isInt();
+    return await ValidatorUtils.errorMapped(req, res, next);
   }
 
   static async getList(req, res) {
