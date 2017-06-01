@@ -32,7 +32,7 @@ const app = require('express')();
    *    "reason": "Error db."
    *  }
  */
-app.post('/tournaments', TournamentController.addValidator, TournamentController.add);
+app.post('/tournaments', TournamentController.titleValidator, TournamentController.add);
 
 /**
  * @api {put} /admin/tournaments Update tournament
@@ -64,7 +64,7 @@ app.post('/tournaments', TournamentController.addValidator, TournamentController
    *    "reason": "Error db."
    *  }
  */
-app.put('/tournaments/:id', TournamentController.idValidator, TournamentController.updateById);
+app.put('/tournaments/:id', TournamentController.idValidator, TournamentController.titleValidator, TournamentController.updateById);
 
 /**
  * @api {delete} admin/tournament/:id Remove tournament

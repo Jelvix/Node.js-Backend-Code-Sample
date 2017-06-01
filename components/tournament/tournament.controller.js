@@ -5,7 +5,7 @@ const db = require('../../config/db');
 const TournamentModel = require('./tournament.model')(db);
 
 class Tournament {
-  static async addValidator(req, res, next) {
+  static async titleValidator(req, res, next) {
     req.checkBody('title', 'Title not valid.').notEmpty();
     return await ValidatorUtils.errorMapped(req, res, next);
   }
