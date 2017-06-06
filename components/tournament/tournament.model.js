@@ -5,11 +5,11 @@ module.exports = db => {
     title: {
       type: Sequelize.STRING
     },
-    startedAt: {
+    startDate: {
       type: Sequelize.INTEGER,
       defaultValue: null
     },
-    stoppedAt: {
+    stopDate: {
       type: Sequelize.INTEGER,
       defaultValue: null
     }

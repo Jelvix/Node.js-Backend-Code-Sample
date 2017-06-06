@@ -15,8 +15,8 @@ const app = require('express')();
  * @apiSuccess {array} tournaments Tournaments list.
  * @apiSuccess {Object} tournament tournament.
  * @apiSuccess {Int} tournament.id Id.
- * @apiSuccess {Int/null} tournament.startedAt Start time.
- * @apiSuccess {Int/null} tournament.endedAt End time.
+ * @apiSuccess {Int/null} tournament.startDate Start time.
+ * @apiSuccess {Int/null} tournament.stopDate End time.
  * @apiSuccess {String} tournament.title Tournament's title.
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
@@ -33,5 +33,36 @@ const app = require('express')();
    *  }
  */
 app.get('/tournaments', TournamentController.limitOffsetValidator, TournamentController.getList);
+
+/**
+ * @api {get} /tournaments/:id Get tournament
+ * @apiName GetTournament
+ * @apiGroup Tournament
+ * @apiPermission user
+ *
+ * @apiHeader {String} X-Auth-Token User auth token.
+ *
+ * @apiParam {Int} id Tournament id.
+ *
+ * @apiSuccess {Object} tournament tournament.
+ * @apiSuccess {Int} tournament.id Id.
+ * @apiSuccess {Int/null} tournament.startDate Start time.
+ * @apiSuccess {Int/null} tournament.stopDate End time.
+ * @apiSuccess {String} tournament.title Tournament's title.
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *  {
+   *    "tournaments": tournament
+   *  }
+ *
+ * @apiError {String} reason Error reason.
+ *
+ * @apiErrorExample Error-Response:
+ *  HTTP/1.1 400 Bad Request
+ *  {
+   *    "reason": "Error db."
+   *  }
+ */
+app.get('/tournaments/:id', TournamentController.idValidator, TournamentController.getById);
 
 module.exports = app;
