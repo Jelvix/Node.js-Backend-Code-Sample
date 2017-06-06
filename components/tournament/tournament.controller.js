@@ -48,6 +48,21 @@ class Tournament {
     }
   }
 
+  static async getById(req, res) {
+    const {id} = req.params;
+    try {
+      const tournament = await TournamentModel.findById(id, {
+        attributes: {exclude: ['createdAt', 'updatedAt', 'deletedAt']}
+      });
+      if (!tournament) {
+        throw new NotFoundError(`Tournament doesn't exist.`);
+      }
+      return res.status(200).send({tournament});
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
   static async updateById(req, res) {
     const {id} = req.params;
     const {title} = req.body;
@@ -87,6 +102,66 @@ class Tournament {
     try {
       const tournaments = await TournamentModel.findAll(options);
       return res.status(200).json({tournaments});
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
+  static async start(req, res) {
+    const {id} = req.params;
+    try {
+      let tournament = await TournamentModel.findById(id);
+
+      if (!tournament) {
+        throw new NotFoundError(`The Tournament doesn't exist.`);
+      }
+
+      if (tournament.stopDate) {
+        throw new BadRequestError('The tournament has ended.');
+      }
+
+      if (tournament.startDate) {
+        throw new BadRequestError('The tournament was already started.');
+      }
+
+      const result = await tournament.update({startDate: Math.floor(Date.now() / 1000)}, {returning: true});
+      tournament = {
+        id: result.id,
+        startDate: result.startDate,
+        stopDate: result.stopDate,
+        title: result.title
+      };
+      return res.status(200).json({tournament});
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
+  static async stop(req, res) {
+    const {id} = req.params;
+    try {
+      let tournament = await TournamentModel.findById(id);
+
+      if (!tournament) {
+        throw new NotFoundError(`The Tournament doesn't exist.`);
+      }
+
+      if (tournament.stopDate) {
+        throw new BadRequestError('The tournament was already stopped.');
+      }
+
+      if (!tournament.startDate) {
+        throw new BadRequestError(`The tournament wasn't started.`);
+      }
+
+      const result = await tournament.update({stopDate: Math.floor(Date.now() / 1000)}, {returning: true});
+      tournament = {
+        id: result.id,
+        startDate: result.startDate,
+        stopDate: result.stopDate,
+        title: result.title
+      };
+      return res.status(200).json({tournament});
     } catch (err) {
       return CommonUtils.catchError(res, err);
     }

@@ -15,8 +15,8 @@ const app = require('express')();
  *
  * @apiSuccess {Object} tournament New tournament.
  * @apiSuccess {Int} tournament.id Id.
- * @apiSuccess {Int/null} tournament.startedAt Start time.
- * @apiSuccess {Int/null} tournament.endedAt End time.
+ * @apiSuccess {Int/null} tournament.startDate Start time.
+ * @apiSuccess {Int/null} tournament.stopDate End time.
  * @apiSuccess {String} tournament.title Tournament's title.
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
@@ -35,7 +35,7 @@ const app = require('express')();
 app.post('/tournaments', TournamentController.titleValidator, TournamentController.add);
 
 /**
- * @api {put} /admin/tournaments Update tournament
+ * @api {put} /admin/tournaments/:id Update tournament
  * @apiName UpdateTournament
  * @apiGroup Tournament
  * @apiPermission moderator
@@ -47,8 +47,8 @@ app.post('/tournaments', TournamentController.titleValidator, TournamentControll
  *
  * @apiSuccess {Object} tournament New tournament.
  * @apiSuccess {Int} tournament.id Id.
- * @apiSuccess {Int/null} tournament.startedAt Start time.
- * @apiSuccess {Int/null} tournament.endedAt End time.
+ * @apiSuccess {Int/null} tournament.startDate Start time.
+ * @apiSuccess {Int/null} tournament.stopDate End time.
  * @apiSuccess {String} tournament.title Tournament's title.
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
@@ -86,7 +86,70 @@ app.put('/tournaments/:id', TournamentController.idValidator, TournamentControll
    *    "reason": "Error db."
    *  }
  */
+
 app.delete('/tournaments/:id', TournamentController.idValidator, TournamentController.deleteById);
+
+/**
+ * @api {get} /admin/tournaments/:id/start Start tournament
+ * @apiName StartTournament
+ * @apiGroup Tournament
+ * @apiPermission admin
+ *
+ * @apiHeader {String} X-Auth-Token User auth token.
+ *
+ * @apiParam {Int} id Tournament id.
+ *
+ * @apiSuccess {Object} tournament New tournament.
+ * @apiSuccess {Int} tournament.id Id.
+ * @apiSuccess {Int/null} tournament.startDate Start time.
+ * @apiSuccess {Int/null} tournament.stopDate End time.
+ * @apiSuccess {String} tournament.title Tournament's title.
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *  {
+   *    "tournament": tournament
+   *  }
+ *
+ * @apiError {String} reason Error reason.
+ *
+ * @apiErrorExample Error-Response:
+ *  HTTP/1.1 400 Bad Request
+ *  {
+   *    "reason": "Error db."
+   *  }
+ */
+app.get('/tournaments/:id/start', TournamentController.idValidator, TournamentController.start);
+
+/**
+ * @api {get} /admin/tournaments/:id/stop Stop tournament
+ * @apiName StopTournament
+ * @apiGroup Tournament
+ * @apiPermission admin
+ *
+ * @apiHeader {String} X-Auth-Token User auth token.
+ *
+ * @apiParam {Int} id Tournament id.
+ *
+ * @apiSuccess {Object} tournament New tournament.
+ * @apiSuccess {Int} tournament.id Id.
+ * @apiSuccess {Int/null} tournament.startDate Start time.
+ * @apiSuccess {Int/null} tournament.stopDate End time.
+ * @apiSuccess {String} tournament.title Tournament's title.
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *  {
+   *    "tournament": tournament
+   *  }
+ *
+ * @apiError {String} reason Error reason.
+ *
+ * @apiErrorExample Error-Response:
+ *  HTTP/1.1 400 Bad Request
+ *  {
+   *    "reason": "Error db."
+   *  }
+ */
+app.get('/tournaments/:id/stop', TournamentController.idValidator, TournamentController.stop);
 
 /**
  * @api {post} /match Create match
