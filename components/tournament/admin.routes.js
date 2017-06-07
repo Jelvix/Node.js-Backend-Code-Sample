@@ -1,6 +1,7 @@
 const TournamentController = require('./tournament.controller');
 const MatchController = require('./match.controller');
 const AuthController = require('../auth/auth.controller.js');
+const Validator = require('../../utils/validator.js');
 const app = require('express')();
 
 /**
@@ -32,7 +33,7 @@ const app = require('express')();
    *    "reason": "Error db."
    *  }
  */
-app.post('/tournaments', TournamentController.titleValidator, TournamentController.add);
+app.post('/tournaments', Validator.titleValidator, TournamentController.add);
 
 /**
  * @api {put} /admin/tournaments/:id Update tournament
@@ -64,7 +65,7 @@ app.post('/tournaments', TournamentController.titleValidator, TournamentControll
    *    "reason": "Error db."
    *  }
  */
-app.put('/tournaments/:id', TournamentController.idValidator, TournamentController.titleValidator, TournamentController.updateById);
+app.put('/tournaments/:id', Validator.idValidator, Validator.titleValidator, TournamentController.updateById);
 
 /**
  * @api {delete} admin/tournament/:id Remove tournament
@@ -87,7 +88,7 @@ app.put('/tournaments/:id', TournamentController.idValidator, TournamentControll
    *  }
  */
 
-app.delete('/tournaments/:id', TournamentController.idValidator, TournamentController.deleteById);
+app.delete('/tournaments/:id', Validator.idValidator, TournamentController.deleteById);
 
 /**
  * @api {get} /admin/tournaments/:id/start Start tournament
@@ -118,7 +119,7 @@ app.delete('/tournaments/:id', TournamentController.idValidator, TournamentContr
    *    "reason": "Error db."
    *  }
  */
-app.get('/tournaments/:id/start', TournamentController.idValidator, TournamentController.start);
+app.get('/tournaments/:id/start', Validator.idValidator, TournamentController.start);
 
 /**
  * @api {get} /admin/tournaments/:id/stop Stop tournament
@@ -149,7 +150,7 @@ app.get('/tournaments/:id/start', TournamentController.idValidator, TournamentCo
    *    "reason": "Error db."
    *  }
  */
-app.get('/tournaments/:id/stop', TournamentController.idValidator, TournamentController.stop);
+app.get('/tournaments/:id/stop', Validator.idValidator, TournamentController.stop);
 
 /**
  * @api {post} /match Create match

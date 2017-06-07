@@ -1,15 +1,9 @@
-const ValidatorUtils = require('../../utils/validator');
 const CommonUtils = require('../../utils/common');
 const {BadRequestError, NotFoundError} = require('../../utils/erros.model.js');
 const db = require('../../config/db');
 const TournamentModel = require('./tournament.model')(db);
 
 class Tournament {
-  static async titleValidator(req, res, next) {
-    req.checkBody('title', 'Title not valid.').notEmpty();
-    return await ValidatorUtils.errorMapped(req, res, next);
-  }
-
   static async add(req, res) {
     const title = req.body.title;
     try {
@@ -28,11 +22,6 @@ class Tournament {
     } catch (err) {
       return CommonUtils.catchError(res, err);
     }
-  }
-
-  static async idValidator(req, res, next) {
-    req.checkParams('id', 'Id not valid.').notEmpty().isInt();
-    return await ValidatorUtils.errorMapped(req, res, next);
   }
 
   static async deleteById(req, res) {
@@ -82,12 +71,6 @@ class Tournament {
     } catch (err) {
       return CommonUtils.catchError(res, err);
     }
-  }
-
-  static async limitOffsetValidator(req, res, next) {
-    req.checkQuery('limit', 'Limit is not a number.').optional().isInt();
-    req.checkQuery('offset', 'Limit is not a number.').optional().isInt();
-    return await ValidatorUtils.errorMapped(req, res, next);
   }
 
   static async getList(req, res) {
