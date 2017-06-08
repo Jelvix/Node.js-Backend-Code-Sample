@@ -1,9 +1,9 @@
 const CommonUtils = require('../../utils/common');
 const db = require('../../config/db');
 const {BadRequestError, NotFoundError} = require('../../utils/erros.model.js');
-const ClubModel = require('./clubs.model')(db);
+const ClubModel = require('./club.model.js')(db);
 
-class Clubs {
+class Club {
   static async add(req, res) {
     const title = req.body.title;
 
@@ -85,4 +85,4 @@ class Clubs {
   }
 }
 
-module.exports = Clubs;
+module.exports = Club;

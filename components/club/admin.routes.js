@@ -1,5 +1,5 @@
 const app = require('express')();
-const ClubsController = require('./clubs.controller');
+const ClubController = require('./club.controller.js');
 const Validator = require('../../utils/validator.js');
 
 /**
@@ -30,7 +30,7 @@ const Validator = require('../../utils/validator.js');
    *    "reason": "DB error."
    *  }
  */
-app.post('/clubs', Validator.titleValidator, ClubsController.add);
+app.post('/clubs', Validator.titleValidator, ClubController.add);
 
 /**
  * @api {get} /admin/clubs Get all clubs
@@ -60,7 +60,7 @@ app.post('/clubs', Validator.titleValidator, ClubsController.add);
    *    "reason": "DB error."
    *  }
  */
-app.get('/clubs', Validator.limitOffsetValidator, ClubsController.getList);
+app.get('/clubs', Validator.limitOffsetValidator, ClubController.getList);
 
 /**
  * @api {put} /admin/clubs/:id Update club
@@ -91,7 +91,7 @@ app.get('/clubs', Validator.limitOffsetValidator, ClubsController.getList);
    *    "reason": "DB error."
    *  }
  */
-app.put('/clubs/:id', Validator.titleValidator, Validator.idValidator, ClubsController.update);
+app.put('/clubs/:id', Validator.titleValidator, Validator.idValidator, ClubController.update);
 
 /**
  * @api {delete} /admin/clubs/:id Delete club
@@ -116,6 +116,6 @@ app.put('/clubs/:id', Validator.titleValidator, Validator.idValidator, ClubsCont
    *    "reason": "DB error."
    *  }
  */
-app.delete('/clubs/:id', Validator.idValidator, ClubsController.deleteById);
+app.delete('/clubs/:id', Validator.idValidator, ClubController.deleteById);
 
 module.exports = app;
