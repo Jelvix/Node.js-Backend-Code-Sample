@@ -1,5 +1,6 @@
 const UserController = require('./user.controller');
 const CommandController = require('./command.controller');
+const Validator = require('../../utils/validator');
 const app = require('express')();
 
 /**
@@ -33,35 +34,7 @@ const app = require('express')();
    *    "reason": "DB error."
    *  }
  */
-app.get('/users', UserController.limitOffsetValidator, UserController.getList);
-
-/**
- * @api {post} /admin/command Create new command
- * @apiName CreateCommand
- * @apiGroup Command
- * @apiPermission admin
- *
- * @apiHeader {String} X-Auth-Token User auth token.
- *
- * @apiParam {String} userId User id.
- * @apiParam {String} title Command name.
- *
- * @apiSuccess {Int} id Command id.
- * @apiSuccessExample Success-Response:
- *  HTTP/1.1 200 OK
- *  {
-   *    "id": 10
-   *  }
- *
- * @apiError {String} reason Error reason.
- *
- * @apiErrorExample Error-Response:
- *  HTTP/1.1 400 Bad Request
- *  {
-   *    "reason": "User don't exists."
-   *  }
- */
-app.post('/commands', CommandController.addValidator, CommandController.add);
+app.get('/users', Validator.limitOffsetValidator, UserController.getList);
 
 /**
  * @api {get} /users/:id Get user
@@ -93,7 +66,7 @@ app.post('/commands', CommandController.addValidator, CommandController.add);
    *    "reason": "DB error."
    *  }
  */
-app.get('/users/:id', UserController.getByIdValidator, UserController.getOneById);
+app.get('/users/:id', Validator.idValidator, UserController.getOneById);
 
 /**
  * @api {delete} /admin/users/:id Delete user
@@ -116,7 +89,7 @@ app.get('/users/:id', UserController.getByIdValidator, UserController.getOneById
    *    "reason": "DB error."
    *  }
  */
-app.delete('/users/:id', UserController.getByIdValidator, UserController.deleteById);
+app.delete('/users/:id', Validator.idValidator, UserController.deleteById);
 
 
 /**
@@ -152,7 +125,35 @@ app.delete('/users/:id', UserController.getByIdValidator, UserController.deleteB
    *    "reason": "DB error."
    *  }
  */
-app.put('/users/:id', UserController.updateUserValidator, UserController.updateUser);
+app.put('/users/:id', Validator.updateUserValidator, UserController.updateUser);
+
+/**
+ * @api {post} /admin/command Create new command
+ * @apiName CreateCommand
+ * @apiGroup Command
+ * @apiPermission admin
+ *
+ * @apiHeader {String} X-Auth-Token User auth token.
+ *
+ * @apiParam {String} userId User id.
+ * @apiParam {String} title Command name.
+ *
+ * @apiSuccess {Int} id Command id.
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *  {
+   *    "id": 10
+   *  }
+ *
+ * @apiError {String} reason Error reason.
+ *
+ * @apiErrorExample Error-Response:
+ *  HTTP/1.1 400 Bad Request
+ *  {
+   *    "reason": "User don't exists."
+   *  }
+ */
+app.post('/commands', CommandController.addValidator, CommandController.add);
 
 /**
  * @api {delete} /admin/command/:id Remove command

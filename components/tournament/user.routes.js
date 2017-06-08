@@ -1,8 +1,9 @@
 const TournamentController = require('./tournament.controller');
+const Validator = require('../../utils/validator.js');
 const app = require('express')();
 
 /**
- * @api {get} /tournaments Get tournament
+ * @api {get} /tournaments Get tournaments
  * @apiName GetTournaments
  * @apiGroup Tournament
  * @apiPermission user
@@ -32,7 +33,8 @@ const app = require('express')();
    *    "reason": "Error db."
    *  }
  */
-app.get('/tournaments', TournamentController.limitOffsetValidator, TournamentController.getList);
+
+app.get('/tournaments', Validator.limitOffsetValidator, TournamentController.getList);
 
 /**
  * @api {get} /tournaments/:id Get tournament
@@ -63,6 +65,6 @@ app.get('/tournaments', TournamentController.limitOffsetValidator, TournamentCon
    *    "reason": "Error db."
    *  }
  */
-app.get('/tournaments/:id', TournamentController.idValidator, TournamentController.getById);
+app.get('/tournaments/:id', Validator.idValidator, TournamentController.getById);
 
 module.exports = app;

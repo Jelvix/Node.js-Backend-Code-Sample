@@ -1,5 +1,6 @@
 const UserController = require('./user.controller');
 const CommandController = require('./command.controller');
+const Validator = require('../../utils/validator.js');
 const app = require('express')();
 
 /**
@@ -60,7 +61,7 @@ app.get('/commands', CommandController.myCommands);
    *    "reason": "DB error."
    *  }
  */
-app.put('/name', UserController.updateNameValidator, UserController.updateMame);
+app.put('/name', Validator.updateNameValidator, UserController.updateMame);
 
 
 /**
@@ -90,7 +91,7 @@ app.put('/name', UserController.updateNameValidator, UserController.updateMame);
    *    "reason": "DB error."
    *  }
  */
-app.put('/password', UserController.updatePasswordValidator, UserController.updatePassword);
+app.put('/password', Validator.updatePasswordValidator, UserController.updatePassword);
 
 /**
  * @api {put} /me/email Update email
@@ -123,6 +124,6 @@ app.put('/password', UserController.updatePasswordValidator, UserController.upda
    *    "reason": "DB error."
    *  }
  */
-app.put('/email', UserController.updateEmailValidator, UserController.updateEmail);
+app.put('/email', Validator.updateEmailValidator, UserController.updateEmail);
 
 module.exports = app;
