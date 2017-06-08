@@ -1,7 +1,7 @@
-const AdminApp = require('./admin.routes');
-const UserApp = require('./user.routes');
-const AuthController = require('../auth/auth.controller');
-const {ADMIN_ROLE, USER_ROLE} = require('../../config/role.constatnts');
+const AdminApp = require('./admin.routes.js');
+const UserApp = require('./../tournament/user.routes.js');
+const AuthController = require('../auth/auth.controller.js');
+const {ADMIN_ROLE, USER_ROLE} = require('../../config/role.constatnts.js');
 
 module.exports = app => {
   app.use('/admin', AuthController.authValidator(ADMIN_ROLE), AdminApp);
