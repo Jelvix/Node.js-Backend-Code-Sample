@@ -94,7 +94,7 @@ app.get('/tournaments/:id', Validator.idValidator, TournamentController.getById)
 app.post('/tournaments/:id/join', Validator.idValidator, Validator.joinTournamentValidator, TeamController.join);
 
 /**
- * @api {get} /tournaments/:id/clubs Available clubs
+ * @api {get} /tournaments/:id/clubs Leave tournament
  * @apiName AvailableClubs
  * @apiGroup Tournament
  * @apiPermission user
@@ -115,12 +115,12 @@ app.post('/tournaments/:id/join', Validator.idValidator, Validator.joinTournamen
  *    "reason": "Error db."
  *  }
  */
-app.get('/tournaments/:id/leave', Validator.idValidator, TeamController.leave);
+app.post('/tournaments/:id/leave', Validator.idValidator, TeamController.leave);
 
 
 /**
- * @api {get} /tournaments/:id/leave Leave tournament
- * @apiName LeaveTournament
+ * @api {get} /tournaments/:id/leave Available clubs
+ * @apiName AvailableClubs
  * @apiGroup Tournament
  * @apiPermission user
  *

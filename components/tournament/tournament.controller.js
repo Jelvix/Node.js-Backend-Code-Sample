@@ -162,9 +162,8 @@ class Tournament {
       }
 
       const teams = await TeamModel.findAll({where: {tournamentId}});
-      let clubIds = [];
-      teams.forEach(el => {
-        clubIds.push(el.clubId);
+      const clubIds = teams.map(el => {
+        return el.clubId;
       });
 
       const clubs = await ClubModel.findAll({
