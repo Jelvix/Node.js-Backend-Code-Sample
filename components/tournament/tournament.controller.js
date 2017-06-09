@@ -166,13 +166,16 @@ class Tournament {
         return el.clubId;
       });
 
-      const clubs = await ClubModel.findAll({
-        where: {id: {$notIn: clubIds}},
+      const options = {
         attributes: {
           exclude: ['updatedAt', 'createdAt', 'deletedAt']
         }
-      });
+      };
+      if (teams.length) {
+        options.where = {id: {$notIn: clubIds}};
+      }
 
+      const clubs = await ClubModel.findAll(options);
       return res.status(200).json({clubs});
     } catch (err) {
       return CommonUtils.catchError(res, err);
