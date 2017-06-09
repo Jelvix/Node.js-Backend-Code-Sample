@@ -9,7 +9,7 @@ class Team {
   static async join(req, res) {
     const tournamentId = req.params.id;
     const userId = req.user.id;
-    const {name, clubId} = req.body;
+    const {clubId} = req.body;
 
     try {
       const existingTournament = await TournamentModel.findById(tournamentId);
@@ -36,9 +36,9 @@ class Team {
         throw new BadRequestError(`Club with clubId "${clubId}" already in use.`);
       }
 
-      await TeamModel.create({name, userId, clubId, tournamentId});
+      await TeamModel.create({userId, clubId, tournamentId});
 
-      return res.status(204).send();
+      return res.status(201).send();
     } catch (err) {
       return CommonUtils.catchError(res, err);
     }
