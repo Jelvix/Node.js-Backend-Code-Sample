@@ -94,8 +94,8 @@ app.get('/tournaments/:id', Validator.idValidator, TournamentController.getById)
 app.post('/tournaments/:id/join', Validator.idValidator, Validator.joinTournamentValidator, TeamController.join);
 
 /**
- * @api {post} /tournaments/:id/clubs Leave tournament
- * @apiName AvailableClubs
+ * @api {post} /tournaments/:id/leave Leave tournament
+ * @apiName LeaveTournament
  * @apiGroup Tournament
  * @apiPermission user
  *
