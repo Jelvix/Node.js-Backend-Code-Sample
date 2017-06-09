@@ -1,15 +1,34 @@
 const Sequelize = require('sequelize');
 
 module.exports = db => {
+  const UserModel = require('../../user/user.model')(db);
+  const TournamentModel = require('../../tournament/tournament.model')(db);
+  const ClubModel = require('../../club/club.model')(db);
+
   return db.define('team', {
     userId: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      references: {
+        model: UserModel,
+        key: 'id',
+        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+      }
     },
     tournamentId: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      references: {
+        model: TournamentModel,
+        key: 'id',
+        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+      }
     },
     clubId: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      references: {
+        model: ClubModel,
+        key: 'id',
+        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+      }
     },
     scored: {
       type: Sequelize.INTEGER,

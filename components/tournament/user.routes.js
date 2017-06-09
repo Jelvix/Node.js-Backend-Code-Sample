@@ -55,16 +55,16 @@ app.get('/tournaments', Validator.limitOffsetValidator, TournamentController.get
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *    "tournaments": tournament
-   *  }
+ *    "tournaments": tournament
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "Error db."
-   *  }
+ *    "reason": "Error db."
+ *  }
  */
 app.get('/tournaments/:id', Validator.idValidator, TournamentController.getById);
 
@@ -88,14 +88,14 @@ app.get('/tournaments/:id', Validator.idValidator, TournamentController.getById)
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "Error db."
-   *  }
+ *    "reason": "Error db."
+ *  }
  */
 app.post('/tournaments/:id/join', Validator.idValidator, Validator.joinTournamentValidator, TeamController.join);
 
 /**
- * @api {get} /tournaments/:id/leave Leave tournament
- * @apiName LeaveTournament
+ * @api {get} /tournaments/:id/clubs Available clubs
+ * @apiName AvailableClubs
  * @apiGroup Tournament
  * @apiPermission user
  *
@@ -112,9 +112,41 @@ app.post('/tournaments/:id/join', Validator.idValidator, Validator.joinTournamen
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "Error db."
-   *  }
+ *    "reason": "Error db."
+ *  }
  */
 app.get('/tournaments/:id/leave', Validator.idValidator, TeamController.leave);
+
+
+/**
+ * @api {get} /tournaments/:id/leave Leave tournament
+ * @apiName LeaveTournament
+ * @apiGroup Tournament
+ * @apiPermission user
+ *
+ * @apiHeader {String} X-Auth-Token User auth token.
+ *
+ * @apiParam {Int} tournamentId Tournament Id.
+ *
+ * @apiSuccess {Array} clubs Available clubs.
+ * @apiSuccess {Object} club tournament.
+ * @apiSuccess {Int} club.id Id.
+ * @apiSuccess {String} club.title Tournament's title.
+ *
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *  {
+ *    clubs: [club]
+ *  }
+ *
+ * @apiError {String} reason Error reason.
+ *
+ * @apiErrorExample Error-Response:
+ *  HTTP/1.1 400 Bad Request
+ *  {
+ *    "reason": "Error db."
+ *  }
+ */
+app.get('/tournaments/:id/clubs', Validator.idValidator, TournamentController.getAvailableClubs);
 
 module.exports = app;
