@@ -1,10 +1,7 @@
 const Sequelize = require('sequelize');
 
 module.exports = db => {
-  db.define('team', {
-    name: {
-      type: Sequelize.STRING
-    },
+  return db.define('team', {
     userId: {
       type: Sequelize.INTEGER
     },

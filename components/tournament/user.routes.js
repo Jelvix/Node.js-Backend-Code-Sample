@@ -1,5 +1,6 @@
 const TournamentController = require('./tournament.controller');
 const Validator = require('../../utils/validator.js');
+const TeamController = require('./team/team.controller.js');
 const app = require('express')();
 
 /**
@@ -66,5 +67,54 @@ app.get('/tournaments', Validator.limitOffsetValidator, TournamentController.get
    *  }
  */
 app.get('/tournaments/:id', Validator.idValidator, TournamentController.getById);
+
+/**
+ * @api {post} /tournaments/:id/join Join tournament
+ * @apiName JoinTournament
+ * @apiGroup Tournament
+ * @apiPermission user
+ *
+ * @apiHeader {String} X-Auth-Token User auth token.
+ *
+ * @apiParam {Int} tournamentId Tournament Id.
+ * @apiParam {Int} clubId Id of available club.
+ *
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 204 OK
+ *  { }
+ *
+ * @apiError {String} reason Error reason.
+ *
+ * @apiErrorExample Error-Response:
+ *  HTTP/1.1 400 Bad Request
+ *  {
+   *    "reason": "Error db."
+   *  }
+ */
+app.post('/tournaments/:id/join', Validator.idValidator, Validator.joinTournamentValidator, TeamController.join);
+
+/**
+ * @api {get} /tournaments/:id/leave Leave tournament
+ * @apiName LeaveTournament
+ * @apiGroup Tournament
+ * @apiPermission user
+ *
+ * @apiHeader {String} X-Auth-Token User auth token.
+ *
+ * @apiParam {Int} tournamentId Tournament Id.
+ *
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 204 OK
+ *  { }
+ *
+ * @apiError {String} reason Error reason.
+ *
+ * @apiErrorExample Error-Response:
+ *  HTTP/1.1 400 Bad Request
+ *  {
+   *    "reason": "Error db."
+   *  }
+ */
+app.get('/tournaments/:id/leave', Validator.idValidator, TeamController.leave);
 
 module.exports = app;
