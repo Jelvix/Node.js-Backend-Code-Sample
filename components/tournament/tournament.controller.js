@@ -2,6 +2,8 @@ const CommonUtils = require('../../utils/common');
 const {BadRequestError, NotFoundError} = require('../../utils/erros.model.js');
 const db = require('../../config/db');
 const TournamentModel = require('./tournament.model')(db);
+const TeamModel = require('./team/team.model')(db);
+const ClubModel = require('../club/club.model')(db);
 
 class Tournament {
   static async add(req, res) {
@@ -145,6 +147,33 @@ class Tournament {
         title: result.title
       };
       return res.status(200).json({tournament});
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
+  static async getAvailableClubs(req, res) {
+    const tournamentId = req.params.id;
+
+    try {
+      const existingTournament = await TournamentModel.findById(tournamentId);
+      if (!existingTournament) {
+        throw new NotFoundError(`The Tournament doesn't exist.`);
+      }
+
+      const teams = await TeamModel.findAll({where: {tournamentId}});
+      const clubIds = teams.map(el => {
+        return el.clubId;
+      });
+
+      const clubs = await ClubModel.findAll({
+        where: {id: {$notIn: clubIds}},
+        attributes: {
+          exclude: ['updatedAt', 'createdAt', 'deletedAt']
+        }
+      });
+
+      return res.status(200).json({clubs});
     } catch (err) {
       return CommonUtils.catchError(res, err);
     }
