@@ -80,7 +80,7 @@ app.get('/tournaments/:id', Validator.idValidator, TournamentController.getById)
  * @apiParam {Int} clubId Id of available club.
  *
  * @apiSuccessExample Success-Response:
- *  HTTP/1.1 204 OK
+ *  HTTP/1.1 201 OK
  *  { }
  *
  * @apiError {String} reason Error reason.
