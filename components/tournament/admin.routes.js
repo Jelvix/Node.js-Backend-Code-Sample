@@ -1,5 +1,5 @@
-const TournamentController = require('./tournament.controller');
-const MatchController = require('./match.controller');
+const TournamentController = require('./../tournament/tournament.controller.js');
+const MatchController = require('./../tournament/match.controller.js');
 const AuthController = require('../auth/auth.controller.js');
 const Validator = require('../../utils/validator.js');
 const app = require('express')();
