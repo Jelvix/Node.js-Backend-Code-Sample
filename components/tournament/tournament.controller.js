@@ -184,8 +184,7 @@ class Tournament {
 
       const clubs = await ClubModel.findAll(options);
       return res.status(200).json({clubs});
-    }
-    catch (err) {
+    } catch (err) {
       return CommonUtils.catchError(res, err);
     }
   }
