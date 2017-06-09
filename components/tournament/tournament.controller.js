@@ -166,7 +166,7 @@ class Tournament {
         return el.clubId;
       });
 
-      let options = {
+      const options = {
         attributes: {
           exclude: ['updatedAt', 'createdAt', 'deletedAt']
         }
