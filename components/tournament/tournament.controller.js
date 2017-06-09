@@ -166,20 +166,13 @@ class Tournament {
         return el.clubId;
       });
 
-      let options = {};
+      let options = {
+        attributes: {
+          exclude: ['updatedAt', 'createdAt', 'deletedAt']
+        }
+      };
       if (teams.length) {
-        options = {
-          where: {id: {$notIn: clubIds}},
-          attributes: {
-            exclude: ['updatedAt', 'createdAt', 'deletedAt']
-          }
-        };
-      } else {
-        options = {
-          attributes: {
-            exclude: ['updatedAt', 'createdAt', 'deletedAt']
-          }
-        };
+        options.where = {id: {$notIn: clubIds}};
       }
 
       const clubs = await ClubModel.findAll(options);
