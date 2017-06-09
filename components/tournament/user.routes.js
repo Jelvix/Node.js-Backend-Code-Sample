@@ -119,7 +119,7 @@ app.post('/tournaments/:id/leave', Validator.idValidator, TeamController.leave);
 
 
 /**
- * @api {get} /tournaments/:id/leave Available clubs
+ * @api {get} /tournaments/:id/clubs Available clubs
  * @apiName AvailableClubs
  * @apiGroup Tournament
  * @apiPermission user
