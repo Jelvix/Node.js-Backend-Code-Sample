@@ -1,7 +1,6 @@
 const md5 = require('md5');
 const db = require('../../config/db');
-const UserModel = require('./user.model')(db);
-const ValidatorUtils = require('../../utils/validator');
+const UserModel = require('./user.model');
 const CommonUtils = require('../../utils/common');
 const {NotFoundError, BadRequestError} = require('./../../utils/erros.model.js');
 

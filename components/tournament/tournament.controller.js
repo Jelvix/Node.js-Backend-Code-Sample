@@ -1,9 +1,9 @@
 const CommonUtils = require('../../utils/common');
 const {BadRequestError, NotFoundError} = require('../../utils/erros.model.js');
-const db = require('../../config/db');
-const TournamentModel = require('./tournament.model')(db);
-const TeamModel = require('./team/team.model')(db);
-const ClubModel = require('../club/club.model')(db);
+const TeamModel = require('./team/team.model');
+const ClubModel = require('../club/club.model');
+const MatchModel = require('./match/match.model');
+const TournamentModel = require('./tournament.model');
 
 class Tournament {
   static async add(req, res) {
@@ -40,15 +40,21 @@ class Tournament {
   }
 
   static async getById(req, res) {
-    const {id} = req.params;
+    const tournamentId = req.params.id;
     try {
-      const tournament = await TournamentModel.findById(id, {
-        attributes: {exclude: ['createdAt', 'updatedAt', 'deletedAt']}
-      });
+      const attributes = {exclude: ['createdAt', 'updatedAt', 'deletedAt']};
+      const tournament = await TournamentModel.findById(tournamentId,
+        {
+          attributes,
+          include: [{model: TeamModel, attributes}, {model: MatchModel, attributes}]
+        });
       if (!tournament) {
         throw new NotFoundError(`Tournament doesn't exist.`);
       }
-      return res.status(200).send({tournament});
+
+      tournament.dataValues.isJoined = tournament.teams.some(el => el.userId === req.user.id);
+
+      return res.status(200).json({tournament});
     } catch (err) {
       return CommonUtils.catchError(res, err);
     }

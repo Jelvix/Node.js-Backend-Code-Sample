@@ -1,9 +1,8 @@
-const db = require('../../../config/db');
 const CommonUtils = require('../../../utils/common.js');
 const {BadRequestError, NotFoundError} = require('../../../utils/erros.model.js');
-const TeamModel = require('./team.model.js')(db);
-const TournamentModel = require('../tournament.model.js')(db);
-const ClubModel = require('../../club/club.model.js')(db);
+const TeamModel = require('./team.model.js');
+const TournamentModel = require('../tournament.model.js');
+const ClubModel = require('../../club/club.model.js');
 
 class Team {
   static async join(req, res) {

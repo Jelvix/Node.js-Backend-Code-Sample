@@ -31,7 +31,7 @@ app.post('/login', AuthController.loginValidator, AuthController.login);
 /**
  * @api {post} /registration Registration
  * @apiName Registration
- * @apiGroup User
+ * @apiGroup Auth
  * @apiPermission non-reg
  *
  * @apiParam {String} email Email.

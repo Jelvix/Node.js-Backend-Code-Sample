@@ -1,10 +1,8 @@
-const ValidatorUtils = require('../../../utils/validator');
-const db = require('../../../config/db');
 const CommonUtils = require('../../../utils/common');
 const {BadRequestError, NotFoundError} = require('../../../utils/erros.model.js');
-const TournamentModel = require('../tournament.model')(db);
-const TeamModel = require('../team/team.model')(db);
-const MatchModel = require('./match.model')(db);
+const TournamentModel = require('../tournament.model');
+const TeamModel = require('../team/team.model');
+const MatchModel = require('./match.model');
 
 class Match {
   static async add(req, res) {
