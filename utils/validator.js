@@ -8,7 +8,7 @@ class ValidatorUtils {
   }
 
   static async titleValidator(req, res, next) {
-    req.checkBody('title', 'Title must not be empty.');
+    req.checkBody('title', 'Title must not be empty.').notEmpty();
     return ValidatorUtils.errorMapped(req, res, next);
   }
 
@@ -50,6 +50,14 @@ class ValidatorUtils {
 
   static async joinTournamentValidator(req, res, next) {
     req.checkBody('clubId', 'clubId is not valid.').notEmpty().isInt();
+    return await ValidatorUtils.errorMapped(req, res, next);
+  }
+
+  static async addMatchValidator(req, res, next) {
+    req.checkBody('homeId', 'homeId is not valid.').notEmpty().isInt();
+    req.checkBody('awayId', 'awayId is not valid.').notEmpty().isInt();
+    req.checkBody('homeScored', 'homeScored is not valid.').notEmpty().isInt();
+    req.checkBody('awayScored', 'awayScored is not valid.').notEmpty().isInt();
     return await ValidatorUtils.errorMapped(req, res, next);
   }
 }

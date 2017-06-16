@@ -1,35 +1,6 @@
 const UserController = require('./user.controller');
-const CommandController = require('./command.controller');
 const Validator = require('../../utils/validator.js');
 const app = require('express')();
-
-/**
- * @api {get} /me/command Get my commands
- * @apiName MyCommands
- * @apiGroup Command
- * @apiPermission user
- *
- * @apiHeader {String} X-Auth-Token User auth token.
- *
- * @apiSuccess {Array} command Commands list.
- * @apiSuccess {Int} commands.id Id.
- * @apiSuccess {String} commands.title Title.
-
- * @apiSuccessExample Success-Response:
- *  HTTP/1.1 200 OK
- *  {
-   *    "commands": [command]
-   *  }
- *
- * @apiError {String} reason Error reason.
- *
- * @apiErrorExample Error-Response:
- *  HTTP/1.1 400 Bad Request
- *  {
-   *    "reason": "DB error."
-   *  }
- */
-app.get('/commands', CommandController.myCommands);
 
 /**
  * @api {put} /me/name Update name
