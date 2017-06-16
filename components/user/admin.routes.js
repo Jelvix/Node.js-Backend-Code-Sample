@@ -1,5 +1,4 @@
 const UserController = require('./user.controller');
-const CommandController = require('./command.controller');
 const Validator = require('../../utils/validator');
 const app = require('express')();
 
@@ -153,29 +152,5 @@ app.put('/users/:id', Validator.updateUserValidator, UserController.updateUser);
    *    "reason": "User don't exists."
    *  }
  */
-app.post('/commands', CommandController.addValidator, CommandController.add);
-
-/**
- * @api {delete} /admin/command/:id Remove command
- * @apiName RemoveCommand
- * @apiGroup Command
- * @apiPermission admin
- *
- * @apiHeader {String} X-Auth-Token User auth token.
- *
- * @apiParam {Int} id Id.
- *
- * @apiSuccessExample Success-Response:
- *  HTTP/1.1 200 OK
- *
- * @apiError {String} reason Error reason.
- *
- * @apiErrorExample Error-Response:
- *  HTTP/1.1 400 Bad Request
- *  {
-   *    "reason": "Command don't exists."
-   *  }
- */
-app.delete('/command/:id', CommandController.deleteValidator, CommandController.deleteById);
 
 module.exports = app;

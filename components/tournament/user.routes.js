@@ -1,6 +1,7 @@
 const TournamentController = require('./tournament.controller');
 const Validator = require('../../utils/validator.js');
 const TeamController = require('./team/team.controller.js');
+const MatchController = require('./match/match.controller');
 const app = require('express')();
 
 /**
@@ -76,7 +77,7 @@ app.get('/tournaments/:id', Validator.idValidator, TournamentController.getById)
  *
  * @apiHeader {String} X-Auth-Token User auth token.
  *
- * @apiParam {Int} tournamentId Tournament Id.
+ * @apiParam {Int} id Tournament Id.
  * @apiParam {Int} clubId Id of available club.
  *
  * @apiSuccessExample Success-Response:
@@ -101,10 +102,10 @@ app.post('/tournaments/:id/join', Validator.idValidator, Validator.joinTournamen
  *
  * @apiHeader {String} X-Auth-Token User auth token.
  *
- * @apiParam {Int} tournamentId Tournament Id.
+ * @apiParam {Int} id Tournament Id.
  *
  * @apiSuccessExample Success-Response:
- *  HTTP/1.1 204 OK
+ *  HTTP/1.1 201 OK
  *  { }
  *
  * @apiError {String} reason Error reason.
@@ -126,7 +127,7 @@ app.post('/tournaments/:id/leave', Validator.idValidator, TeamController.leave);
  *
  * @apiHeader {String} X-Auth-Token User auth token.
  *
- * @apiParam {Int} tournamentId Tournament Id.
+ * @apiParam {Int} id Tournament Id.
  *
  * @apiSuccess {Array} clubs Available clubs.
  * @apiSuccess {Object} club tournament.
@@ -148,5 +149,37 @@ app.post('/tournaments/:id/leave', Validator.idValidator, TeamController.leave);
  *  }
  */
 app.get('/tournaments/:id/clubs', Validator.idValidator, TournamentController.getAvailableClubs);
+
+/**
+ * @api {get} /tournaments/:id/matches Get match by tournament id
+ * @apiName GetMatch
+ * @apiGroup Match
+ * @apiPermission user
+ *
+ * @apiHeader {String} X-Auth-Token User auth token.
+ *
+ * @apiParam {Int} id Tournament id.
+ *
+ * @apiSuccess {Array} matches Matches list.
+ * @apiSuccess {Object} match Matches list.
+ * @apiSuccess {Int} match.homeId Id home user.
+ * @apiSuccess {Int} match.awayId Id away user.
+ * @apiSuccess {Int} match.homeScored Scored home user.
+ * @apiSuccess {Int} match.awayScored Scored home user.
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *  {
+   *    "matches": [match]
+   *  }
+ *
+ * @apiError {String} reason Error reason.
+ *
+ * @apiErrorExample Error-Response:
+ *  HTTP/1.1 400 Bad Request
+ *  {
+   *    "reason": "Error db."
+   *  }
+ */
+app.get('/tournaments/:id/matches', Validator.idValidator, MatchController.getList);
 
 module.exports = app;

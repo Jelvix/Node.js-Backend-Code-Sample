@@ -18,7 +18,7 @@ class Tournament {
         throw new Error('Cannot create a tournament.');
       }
 
-      return res.status(200).json({
+      return res.status(201).json({
         tournament
       });
     } catch (err) {

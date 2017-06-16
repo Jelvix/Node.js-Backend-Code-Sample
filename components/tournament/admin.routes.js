@@ -1,6 +1,5 @@
 const TournamentController = require('./../tournament/tournament.controller.js');
-const MatchController = require('./../tournament/match.controller.js');
-const AuthController = require('../auth/auth.controller.js');
+const MatchController = require('./match/match.controller.js');
 const Validator = require('../../utils/validator.js');
 const app = require('express')();
 
@@ -91,7 +90,7 @@ app.put('/tournaments/:id', Validator.idValidator, Validator.titleValidator, Tou
 app.delete('/tournaments/:id', Validator.idValidator, TournamentController.deleteById);
 
 /**
- * @api {get} /admin/tournaments/:id/start Start tournament
+ * @api {post} /admin/tournaments/:id/start Start tournament
  * @apiName StartTournament
  * @apiGroup Tournament
  * @apiPermission admin
@@ -119,10 +118,10 @@ app.delete('/tournaments/:id', Validator.idValidator, TournamentController.delet
    *    "reason": "Error db."
    *  }
  */
-app.get('/tournaments/:id/start', Validator.idValidator, TournamentController.start);
+app.post('/tournaments/:id/start', Validator.idValidator, TournamentController.start);
 
 /**
- * @api {get} /admin/tournaments/:id/stop Stop tournament
+ * @api {post} /admin/tournaments/:id/stop Stop tournament
  * @apiName StopTournament
  * @apiGroup Tournament
  * @apiPermission admin
@@ -150,58 +149,32 @@ app.get('/tournaments/:id/start', Validator.idValidator, TournamentController.st
    *    "reason": "Error db."
    *  }
  */
-app.get('/tournaments/:id/stop', Validator.idValidator, TournamentController.stop);
+app.post('/tournaments/:id/stop', Validator.idValidator, TournamentController.stop);
 
 /**
- * @api {post} /match Create match
+ * @api {post} admin/tournaments/:id/matches Create match
  * @apiName CreateMatch
  * @apiGroup Match
- * @apiPermission moderator
- *
- * @apiHeader {String} X-Auth-Token User auth token.
- *
- * @apiParam {Int} homeId Home user id.
- * @apiParam {Int} awayId Away user id.
- * @apiParam {Int} homeScored Home user id.
- * @apiParam {Int} awayScored Away user id.
- * @apiParam {Int} tournamentId Tournament id.
- *
- * @apiSuccess {Int} id Match id.
- * @apiSuccessExample Success-Response:
- *  HTTP/1.1 200 OK
- *  {
-   *    "id": 10
-   *  }
- *
- * @apiError {String} reason Error reason.
- *
- * @apiErrorExample Error-Response:
- *  HTTP/1.1 400 Bad Request
- *  {
-   *    "reason": "Error db."
-   *  }
- */
-app.post('/match', AuthController.authValidator(1), MatchController.addValidator, MatchController.add);
-
-/**
- * @api {get} /match/:id Get match by tournament id
- * @apiName GetMatch
- * @apiGroup Match
- * @apiPermission user
+ * @apiPermission admin
  *
  * @apiHeader {String} X-Auth-Token User auth token.
  *
  * @apiParam {Int} id Tournament id.
+ * @apiParam {Int} homeId Home user id.
+ * @apiParam {Int} awayId Away user id.
+ * @apiParam {Int} homeScored Home user id.
+ * @apiParam {Int} awayScored Away user id.
  *
- * @apiSuccess {Array} match Match list.
- * @apiSuccess {Int} match.homeId Id home user.
- * @apiSuccess {Int} match.awayId Id away user.
- * @apiSuccess {Int} match.homeScored Scored home user.
- * @apiSuccess {Int} match.awayScored Scored home user.
+ * @apiSuccess {Object} match Added match.
+ * @apiSuccess {Int} match.id Match Id.
+ * @apiSuccess {Int} match.homeId Home team Id.
+ * @apiSuccess {Int} match.awayId Away Team Id.
+ * @apiSuccess {Int} match.awayScored Away Team scored.
+ * @apiSuccess {Int} match.homeScored Home Team scored.
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *    "matches": [match]
+   *    "match": match
    *  }
  *
  * @apiError {String} reason Error reason.
@@ -212,6 +185,6 @@ app.post('/match', AuthController.authValidator(1), MatchController.addValidator
    *    "reason": "Error db."
    *  }
  */
-app.get('/match/:id', AuthController.authValidator(0), MatchController.getByTournamentValidator, MatchController.getByTournament);
+app.post('/tournaments/:id/matches', Validator.idValidator, Validator.addMatchValidator, MatchController.add);
 
 module.exports = app;
