@@ -1,7 +1,6 @@
 const CommonUtils = require('../../utils/common');
-const db = require('../../config/db');
 const {BadRequestError, NotFoundError} = require('../../utils/erros.model.js');
-const ClubModel = require('./club.model.js')(db);
+const ClubModel = require('./club.model.js');
 
 class Club {
   static async add(req, res) {

@@ -39,7 +39,7 @@ const app = require('express')();
 app.get('/tournaments', Validator.limitOffsetValidator, TournamentController.getList);
 
 /**
- * @api {get} /tournaments/:id Get tournament
+ * @api {get} /tournaments/:id Get tournament info
  * @apiName GetTournament
  * @apiGroup Tournament
  * @apiPermission user
@@ -53,10 +53,31 @@ app.get('/tournaments', Validator.limitOffsetValidator, TournamentController.get
  * @apiSuccess {Int/null} tournament.startDate Start time.
  * @apiSuccess {Int/null} tournament.stopDate End time.
  * @apiSuccess {String} tournament.title Tournament's title.
+ * @apiSuccess {Array} tournament.teams Joined teams list.
+ * @apiSuccess {Object} team Joined team list.
+ * @apiSuccess {Int} team.id Team Id.
+ * @apiSuccess {Int} team.tournamentId Tournament Id.
+ * @apiSuccess {Int} team.scored Team scored.
+ * @apiSuccess {Int} team.missed Team messed.
+ * @apiSuccess {Int} team.wins Team's wins.
+ * @apiSuccess {Int} team.loses Team's loses.
+ * @apiSuccess {Int} team.draws Team's draws.
+ * @apiSuccess {Array} tournament.matches Tournament's matches.
+ * @apiSuccess {Object} match Tournament's match.
+ * @apiSuccess {Int} match.id Team Id.
+ * @apiSuccess {Int} match.tournamentId Tournament Id.
+ * @apiSuccess {Int} match.homeId Home Team Id.
+ * @apiSuccess {Int} match.awayId Away Team Id.
+ * @apiSuccess {Int} match.homeScored Home Team scored.
+ * @apiSuccess {Int} match.awayScored Away Team scored.
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
- *    "tournaments": tournament
+ *    "tournament": {
+ *      tournament,
+ *      teams: [team],
+ *      matches: [match]
+ *    }
  *  }
  *
  * @apiError {String} reason Error reason.
