@@ -62,24 +62,23 @@ class Match {
         scored: awayTeam.scored + match.awayScored,
         missed: awayTeam.missed + match.homeScored
       };
-      switch (true) {
-        case match.homeScored > match.awayScored:
-          homeInfo.wins = homeTeam.wins + 1;
-          homeInfo.points = homeTeam.points + 3;
-          awayInfo.loses = awayTeam.loses + 1;
-          break;
-        case match.awayScored > match.awayScored:
-          awayInfo.wins = awayTeam.wins + 1;
-          awayInfo.points = awayTeam.points + 3;
-          homeInfo.loses = homeTeam.loses + 1;
-          break;
-        default:
-          awayInfo.points = awayTeam.points + 1;
-          awayInfo.draws = awayTeam.draws + 1;
-          homeInfo.points = homeTeam.points + 1;
-          homeInfo.draws = homeTeam.draws + 1;
-          break;
+      if (match.homeScored > match.awayScored) {
+        homeInfo.wins = homeTeam.wins + 1;
+        homeInfo.points = homeTeam.points + 3;
+        awayInfo.loses = awayTeam.loses + 1;
       }
+      if (match.awayScored > match.awayScored) {
+        awayInfo.wins = awayTeam.wins + 1;
+        awayInfo.points = awayTeam.points + 3;
+        homeInfo.loses = homeTeam.loses + 1;
+      }
+      if (match.awayScored === match.awayScored) {
+        awayInfo.points = awayTeam.points + 1;
+        awayInfo.draws = awayTeam.draws + 1;
+        homeInfo.points = homeTeam.points + 1;
+        homeInfo.draws = homeTeam.draws + 1;
+      }
+
       await homeTeam.update(homeInfo);
       await awayTeam.update(awayInfo);
 

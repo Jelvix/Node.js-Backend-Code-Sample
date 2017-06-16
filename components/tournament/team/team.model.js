@@ -10,24 +10,21 @@ module.exports = db => {
       type: Sequelize.INTEGER,
       references: {
         model: UserModel,
-        key: 'id',
-        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+        key: 'id'
       }
     },
     tournamentId: {
       type: Sequelize.INTEGER,
       references: {
         model: TournamentModel,
-        key: 'id',
-        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+        key: 'id'
       }
     },
     clubId: {
       type: Sequelize.INTEGER,
       references: {
         model: ClubModel,
-        key: 'id',
-        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+        key: 'id'
       }
     },
     scored: {
