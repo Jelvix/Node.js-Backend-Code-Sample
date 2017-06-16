@@ -151,7 +151,7 @@ app.post('/tournaments/:id/leave', Validator.idValidator, TeamController.leave);
 app.get('/tournaments/:id/clubs', Validator.idValidator, TournamentController.getAvailableClubs);
 
 /**
- * @api {get} /tournaments/:id/matches Get match by tournament id
+ * @api {get} /tournaments/:id/matches Get matches list
  * @apiName GetMatch
  * @apiGroup Match
  * @apiPermission user
