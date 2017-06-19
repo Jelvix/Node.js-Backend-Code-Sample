@@ -40,6 +40,12 @@ class User {
     }
   }
 
+  static getMe(req, res) {
+    const user = req.user;
+    delete user.password;
+    return res.status(200).json({user});
+  }
+
   static async updateUser(req, res) {
     const {id} = req.params;
     const {name, email, role} = req.body;
