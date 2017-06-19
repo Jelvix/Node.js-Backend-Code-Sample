@@ -31,7 +31,7 @@ class Match {
         throw new NotFoundError(`Home Team doesn't exist.`);
       }
 
-      const awayTeam = await TeamModel.find({where: {id: homeId, tournamentId}});
+      const awayTeam = await TeamModel.find({where: {id: awayId, tournamentId}});
       if (!awayTeam) {
         throw new NotFoundError(`Away Team doesn't exist.`);
       }
