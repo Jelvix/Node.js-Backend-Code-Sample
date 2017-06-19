@@ -79,7 +79,12 @@ class Auth {
             });
           }
 
-          req.user = await UserModel.findById(decoded.id, {raw: true});
+          req.user = await UserModel.findById(decoded.id, {
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'deletedAt']
+            },
+            raw: true
+          });
 
           if (!req.user) {
             return res.status(401).json({
