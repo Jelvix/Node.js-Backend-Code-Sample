@@ -4,7 +4,6 @@ const TeamModel = require('./team/team.model');
 const ClubModel = require('../club/club.model');
 const MatchModel = require('./match/match.model');
 const TournamentModel = require('./tournament.model');
-const sequelize = require('sequelize');
 
 class Tournament {
   static async add(req, res) {
