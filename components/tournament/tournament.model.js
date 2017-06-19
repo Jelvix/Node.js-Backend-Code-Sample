@@ -19,4 +19,3 @@ model.hasMany(db.models.match);
 model.hasMany(db.models.team);
 
 module.exports = model;
-

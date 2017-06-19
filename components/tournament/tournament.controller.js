@@ -4,6 +4,7 @@ const TeamModel = require('./team/team.model');
 const ClubModel = require('../club/club.model');
 const MatchModel = require('./match/match.model');
 const TournamentModel = require('./tournament.model');
+const sequelize = require('sequelize');
 
 class Tournament {
   static async add(req, res) {
@@ -46,11 +47,22 @@ class Tournament {
       const tournament = await TournamentModel.findById(tournamentId,
         {
           attributes,
-          include: [{model: TeamModel, attributes}, {model: MatchModel, attributes}]
+          include: [
+            {model: TeamModel, attributes},
+            {model: MatchModel, attributes}
+          ],
+          order: [[{model: TeamModel, as: 'teams'}, 'points', 'DESC']]
         });
       if (!tournament) {
         throw new NotFoundError(`Tournament doesn't exist.`);
       }
+
+      tournament.dataValues.teams = tournament.dataValues.teams.sort((a, b) => {
+        if (a.points === b.points) {
+          return a.scored - a.missed > b.scored - b.missed ? -1 : 1;
+        }
+        return 0;
+      });
 
       tournament.dataValues.isJoined = tournament.teams.some(el => el.userId === req.user.id);
 
