@@ -209,10 +209,18 @@ class User {
 
     const endedTournaments = await TournamentModel.findAll({
       where: {stopDate: {$not: null}},
-      include: [{model: TeamModel, limit: 1, order: [['points', 'DESC']]}]
+      include: [{model: TeamModel, order: [['points', 'DESC']]}]
     });
 
     endedTournaments.forEach((tournament) => {
+      tournament.teams = tournament.teams.sort((a, b) => {
+        if (a.points === b.points) {
+          return a.scored - a.missed > b.scored - b.missed ? -1 : 1;
+        }
+        return 0;
+      });
+
+
       if (tournament.teams.length && tournament.teams[0].userId === userId) {
         statistics.champion++;
       }
