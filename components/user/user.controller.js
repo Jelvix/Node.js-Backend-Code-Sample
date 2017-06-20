@@ -1,6 +1,9 @@
 const md5 = require('md5');
 const db = require('../../config/db');
 const UserModel = require('./user.model');
+const TeamModel = require('../tournament/team/team.model');
+require('../tournament/match/match.model');
+const TournamentModel = require('../tournament/tournament.model');
 const CommonUtils = require('../../utils/common');
 const {NotFoundError, BadRequestError} = require('./../../utils/erros.model.js');
 
@@ -152,6 +155,70 @@ class User {
     } catch (err) {
       return CommonUtils.catchError(res, err);
     }
+  }
+
+  static async getMyStatistics(req, res) {
+    const userId = req.user.id;
+
+    try {
+      const statistics = await User.getStatistics(userId);
+
+      return res.status(200).json({statistics});
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
+  static async getUserStatistics(req, res) {
+    const userId = req.params.id;
+
+    try {
+      const user = await UserModel.findById(userId);
+      if (!user) {
+        throw new NotFoundError(`User doesn't exist.`);
+      }
+
+      const statistics = await User.getStatistics(userId);
+
+      return res.status(200).json({statistics});
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
+  static async getStatistics(userId) {
+    const teams = await TeamModel.findAll({where: {userId}, raw: true});
+    let statistics = {
+      totalMatches: 0,
+      wins: 0,
+      loses: 0,
+      draws: 0,
+      champion: 0
+    };
+
+    statistics = teams.reduce((prev, curr) => (
+      {
+        totalMatches: prev.wins + prev.loses + prev.draws + curr.wins + curr.loses + curr.draws,
+        wins: prev.wins + curr.wins,
+        loses: prev.loses + curr.loses,
+        draws: prev.draws + curr.draws,
+        champion: 0
+      }
+    ), statistics);
+
+
+    const endedTournaments = await TournamentModel.findAll({
+      where: {stopDate: {$not: null}},
+      include: [{model: TeamModel, limit: 1, order: [['points', 'DESC']]}]
+    });
+
+    endedTournaments.forEach((tournament) => {
+      if (tournament.teams.length && tournament.teams[0].userId === userId) {
+        statistics.champion++;
+      }
+    });
+
+    return statistics;
   }
 }
 

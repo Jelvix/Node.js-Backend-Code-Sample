@@ -4,6 +4,6 @@ const AuthController = require('./../auth/auth.controller.js');
 const {USER_ROLE, ADMIN_ROLE} = require('../../config/role.constatnts.js');
 
 module.exports = app => {
-  app.use('/me', AuthController.authValidator(USER_ROLE), UserApp);
+  app.use('', AuthController.authValidator(USER_ROLE), UserApp);
   app.use('/admin', AuthController.authValidator(ADMIN_ROLE), AdminApp);
 };
