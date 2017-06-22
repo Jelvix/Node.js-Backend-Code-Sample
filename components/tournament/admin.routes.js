@@ -1,6 +1,7 @@
 const TournamentController = require('./../tournament/tournament.controller.js');
 const MatchController = require('./match/match.controller.js');
 const Validator = require('../../utils/validator.js');
+const MatchService = require('./match/match.service.js');
 const app = require('express')();
 
 /**
@@ -185,6 +186,45 @@ app.post('/tournaments/:id/stop', Validator.idValidator, TournamentController.st
    *    "reason": "Error db."
    *  }
  */
-app.post('/tournaments/:id/matches', Validator.idValidator, Validator.addMatchValidator, MatchController.add);
+app.post('/tournaments/:id/matches', Validator.idValidator, MatchService.matchValidator, MatchController.add);
+
+
+/**
+ * @api {post} admin/tournaments/:tournamentId/matches/:matchId Update match
+ * @apiName UpdateMatch
+ * @apiGroup Match
+ * @apiPermission admin
+ *
+ * @apiHeader {String} X-Auth-Token User auth token.
+ *
+ * @apiParam {Int} tournamentId Tournament id.
+ * @apiParam {Int} matchId Match id.
+ * @apiParam {Int} homeId Home user id.
+ * @apiParam {Int} awayId Away user id.
+ * @apiParam {Int} homeScored Home user id.
+ * @apiParam {Int} awayScored Away user id.
+ *
+ * @apiSuccess {Object} match Updated match.
+ * @apiSuccess {Int} match.id Match Id.
+ * @apiSuccess {Int} match.homeId Home team Id.
+ * @apiSuccess {Int} match.awayId Away Team Id.
+ * @apiSuccess {Int} match.awayScored Away Team scored.
+ * @apiSuccess {Int} match.homeScored Home Team scored.
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *  {
+   *    "match": match
+   *  }
+ *
+ * @apiError {String} reason Error reason.
+ *
+ * @apiErrorExample Error-Response:
+ *  HTTP/1.1 400 Bad Request
+ *  {
+   *    "reason": "Error db."
+   *  }
+ */
+app.put('/tournaments/:tournamentId/matches/:matchId', MatchService.matchIdsValidator,
+  MatchService.matchValidator, MatchController.update);
 
 module.exports = app;
