@@ -47,11 +47,6 @@ class ValidatorUtils {
     req.checkParams('id', 'Id is not valid').isInt();
     return await ValidatorUtils.errorMapped(req, res, next);
   }
-
-  static async joinTournamentValidator(req, res, next) {
-    req.checkBody('clubId', 'clubId is not valid.').notEmpty().isInt();
-    return await ValidatorUtils.errorMapped(req, res, next);
-  }
 }
 
 module.exports = ValidatorUtils;

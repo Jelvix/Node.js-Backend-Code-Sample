@@ -22,16 +22,18 @@ const app = require('express')();
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *    "tournament": tournament
-   *  }
+ *    "tournament": tournament
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "Error db."
-   *  }
+ *    "reason": "Error db."
+ *  }
+ *
+ *  @apiSampleRequest
  */
 app.post('/tournaments', Validator.titleValidator, TournamentController.add);
 
@@ -54,16 +56,18 @@ app.post('/tournaments', Validator.titleValidator, TournamentController.add);
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *    "tournament": tournament
-   *  }
+ *    "tournament": tournament
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "Error db."
-   *  }
+ *    "reason": "Error db."
+ *  }
+ *
+ *  @apiSampleRequest
  */
 app.put('/tournaments/:id', Validator.idValidator, Validator.titleValidator, TournamentController.updateById);
 
@@ -84,8 +88,10 @@ app.put('/tournaments/:id', Validator.idValidator, Validator.titleValidator, Tou
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "Error db."
-   *  }
+ *    "reason": "Error db."
+ *  }
+ *
+ *  @apiSampleRequest
  */
 
 app.delete('/tournaments/:id', Validator.idValidator, TournamentController.deleteById);
@@ -108,16 +114,18 @@ app.delete('/tournaments/:id', Validator.idValidator, TournamentController.delet
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *    "tournament": tournament
-   *  }
+ *    "tournament": tournament
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "Error db."
-   *  }
+ *    "reason": "Error db."
+ *  }
+ *
+ *  @apiSampleRequest
  */
 app.post('/tournaments/:id/start', Validator.idValidator, TournamentController.start);
 
@@ -139,16 +147,18 @@ app.post('/tournaments/:id/start', Validator.idValidator, TournamentController.s
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *    "tournament": tournament
-   *  }
+ *    "tournament": tournament
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "Error db."
-   *  }
+ *    "reason": "Error db."
+ *  }
+ *
+ *  @apiSampleRequest
  */
 app.post('/tournaments/:id/stop', Validator.idValidator, TournamentController.stop);
 
@@ -183,8 +193,10 @@ app.post('/tournaments/:id/stop', Validator.idValidator, TournamentController.st
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "Error db."
-   *  }
+ *    "reason": "Error db."
+ *  }
+ *
+ *  @apiSampleRequest
  */
 app.post('/tournaments/:id/matches', Validator.idValidator, MatchService.matchValidator, MatchController.add);
 
@@ -213,16 +225,18 @@ app.post('/tournaments/:id/matches', Validator.idValidator, MatchService.matchVa
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *    "match": match
-   *  }
+ *    "match": match
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "Error db."
-   *  }
+ *    "reason": "Error db."
+ *  }
+ *
+ *  @apiSampleRequest
  */
 app.put('/tournaments/:tournamentId/matches/:matchId', MatchService.matchIdsValidator,
   MatchService.matchValidator, MatchController.update);

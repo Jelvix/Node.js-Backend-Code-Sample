@@ -2,6 +2,7 @@ const TournamentController = require('./tournament.controller');
 const Validator = require('../../utils/validator.js');
 const TeamController = require('./team/team.controller.js');
 const MatchController = require('./match/match.controller');
+const TeamService = require('./team/team.service');
 const app = require('express')();
 
 /**
@@ -24,16 +25,18 @@ const app = require('express')();
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *    "tournaments": [tournament]
-   *  }
+ *    "tournaments": [tournament]
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "Error db."
-   *  }
+ *    "reason": "Error db."
+ *  }
+ *
+ *  @apiSampleRequest
  */
 
 app.get('/tournaments', Validator.limitOffsetValidator, TournamentController.getList);
@@ -87,6 +90,8 @@ app.get('/tournaments', Validator.limitOffsetValidator, TournamentController.get
  *  {
  *    "reason": "Error db."
  *  }
+ *
+ *  @apiSampleRequest
  */
 app.get('/tournaments/:id', Validator.idValidator, TournamentController.getById);
 
@@ -112,8 +117,10 @@ app.get('/tournaments/:id', Validator.idValidator, TournamentController.getById)
  *  {
  *    "reason": "Error db."
  *  }
+ *
+ *  @apiSampleRequest
  */
-app.post('/tournaments/:id/join', Validator.idValidator, Validator.joinTournamentValidator, TeamController.join);
+app.post('/tournaments/:id/join', Validator.idValidator, TeamService.clubIdValidator, TeamController.join);
 
 /**
  * @api {post} /tournaments/:id/leave Leave tournament
@@ -136,6 +143,8 @@ app.post('/tournaments/:id/join', Validator.idValidator, Validator.joinTournamen
  *  {
  *    "reason": "Error db."
  *  }
+ *
+ *  @apiSampleRequest
  */
 app.post('/tournaments/:id/leave', Validator.idValidator, TeamController.leave);
 
@@ -168,6 +177,8 @@ app.post('/tournaments/:id/leave', Validator.idValidator, TeamController.leave);
  *  {
  *    "reason": "Error db."
  *  }
+ *
+ *  @apiSampleRequest
  */
 app.get('/tournaments/:id/clubs', Validator.idValidator, TournamentController.getAvailableClubs);
 
@@ -190,16 +201,18 @@ app.get('/tournaments/:id/clubs', Validator.idValidator, TournamentController.ge
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *    "matches": [match]
-   *  }
+ *    "matches": [match]
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "Error db."
-   *  }
+ *    "reason": "Error db."
+ *  }
+ *
+ *  @apiSampleRequest
  */
 app.get('/tournaments/:id/matches', Validator.idValidator, MatchController.getList);
 
