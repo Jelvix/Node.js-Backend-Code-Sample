@@ -190,7 +190,7 @@ app.post('/tournaments/:id/matches', Validator.idValidator, MatchService.matchVa
 
 
 /**
- * @api {post} admin/tournaments/:tournamentId/matches/:matchId Update match
+ * @api {put} admin/tournaments/:tournamentId/matches/:matchId Update match
  * @apiName UpdateMatch
  * @apiGroup Match
  * @apiPermission admin
