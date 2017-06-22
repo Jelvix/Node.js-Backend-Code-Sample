@@ -20,8 +20,8 @@ class MatchService {
     return await MatchModel.findById(id);
   }
 
-  static async updateMatch(data, options) {
-    let match = await MatchModel.update(data, options);
+  static async updateMatch(matchId, data) {
+    let match = await MatchModel.update(data, {where: {id: matchId}, returning: true});
     if (!match[0]) {
       throw new Error('DB error while updating the match.');
     }

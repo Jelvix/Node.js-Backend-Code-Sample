@@ -52,9 +52,7 @@ class Match {
         awayScored
       };
 
-      const options = {where: {id: matchId}, returning: true};
-
-      let match = await MatchService.updateMatch(updateData, options);
+      const match = await MatchService.updateMatch(matchId, updateData);
 
       const teams = {homeTeam, awayTeam};
       const {homeInfo, awayInfo} = MatchService.recalculateTable(teams, oldMatch, match);
