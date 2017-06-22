@@ -52,14 +52,6 @@ class ValidatorUtils {
     req.checkBody('clubId', 'clubId is not valid.').notEmpty().isInt();
     return await ValidatorUtils.errorMapped(req, res, next);
   }
-
-  static async addMatchValidator(req, res, next) {
-    req.checkBody('homeId', 'homeId is not valid.').notEmpty().isInt();
-    req.checkBody('awayId', 'awayId is not valid.').notEmpty().isInt();
-    req.checkBody('homeScored', 'homeScored is not valid.').notEmpty().isInt();
-    req.checkBody('awayScored', 'awayScored is not valid.').notEmpty().isInt();
-    return await ValidatorUtils.errorMapped(req, res, next);
-  }
 }
 
 module.exports = ValidatorUtils;
