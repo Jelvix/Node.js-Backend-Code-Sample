@@ -1,26 +1,13 @@
 const CommonUtils = require('../../utils/common');
-const {BadRequestError, NotFoundError} = require('../../utils/erros.model.js');
-const TeamModel = require('./team/team.model');
-const ClubModel = require('../club/club.model');
-const MatchModel = require('./match/match.model');
-const TournamentModel = require('./tournament.model');
+const TournamentService = require('./tournament.service');
 
 class Tournament {
   static async add(req, res) {
     const title = req.body.title;
     try {
-      let tournament = await TournamentModel.create({title});
-      tournament = await TournamentModel.findById(tournament.id, {
-        attributes: {exclude: ['createdAt', 'updatedAt', 'deletedAt']}
-      });
+      const tournament = await TournamentService.createTournament({title});
 
-      if (!tournament) {
-        throw new Error('Cannot create a tournament.');
-      }
-
-      return res.status(201).json({
-        tournament
-      });
+      return res.status(201).json({tournament});
     } catch (err) {
       return CommonUtils.catchError(res, err);
     }
@@ -29,10 +16,7 @@ class Tournament {
   static async deleteById(req, res) {
     const {id} = req.params;
     try {
-      const tournament = await TournamentModel.destroy({where: {id}});
-      if (!tournament) {
-        throw new NotFoundError(`Tournament doesn't exist.`);
-      }
+      await TournamentService.deleteTournament(id);
       return res.status(204).send();
     } catch (err) {
       return CommonUtils.catchError(res, err);
@@ -41,29 +25,10 @@ class Tournament {
 
   static async getById(req, res) {
     const tournamentId = req.params.id;
+    const userId = req.user.id;
     try {
-      const attributes = {exclude: ['createdAt', 'updatedAt', 'deletedAt']};
-      const tournament = await TournamentModel.findById(tournamentId,
-        {
-          attributes,
-          include: [
-            {model: TeamModel, attributes},
-            {model: MatchModel, attributes}
-          ],
-          order: [[{model: TeamModel, as: 'teams'}, 'points', 'DESC']]
-        });
-      if (!tournament) {
-        throw new NotFoundError(`Tournament doesn't exist.`);
-      }
-
-      tournament.dataValues.teams = tournament.dataValues.teams.sort((a, b) => {
-        if (a.points === b.points) {
-          return a.scored - a.missed > b.scored - b.missed ? -1 : 1;
-        }
-        return 0;
-      });
-
-      tournament.dataValues.isJoined = tournament.teams.some(el => el.userId === req.user.id);
+      const ids = {tournamentId, userId};
+      const tournament = await TournamentService.getTournamentInfo(ids);
 
       return res.status(200).json({tournament});
     } catch (err) {
@@ -75,17 +40,7 @@ class Tournament {
     const {id} = req.params;
     const {title} = req.body;
     try {
-      await TournamentModel.update({title}, {where: {id}});
-      const tournament = await TournamentModel.findById(id, {
-        attributes: {
-          exclude: ['updatedAt', 'createdAt', 'deletedAt']
-        }
-      });
-
-      if (!tournament) {
-        throw new NotFoundError(`Tournament doesn't exist.`);
-      }
-
+      const tournament = await TournamentService.updateTournament(id, {title});
       return res.status(200).json({tournament});
     } catch (err) {
       return CommonUtils.catchError(res, err);
@@ -93,16 +48,8 @@ class Tournament {
   }
 
   static async getList(req, res) {
-    let options = {
-      offset: +req.query.offset || 0,
-      limit: +req.query.limit || 30,
-      attributes: {
-        exclude: ['updatedAt', 'createdAt', 'deletedAt']
-      }
-    };
-
     try {
-      const tournaments = await TournamentModel.findAll(options);
+      const tournaments = await TournamentService.getAllTournaments(req.query);
       return res.status(200).json({tournaments});
     } catch (err) {
       return CommonUtils.catchError(res, err);
@@ -112,27 +59,7 @@ class Tournament {
   static async start(req, res) {
     const {id} = req.params;
     try {
-      let tournament = await TournamentModel.findById(id);
-
-      if (!tournament) {
-        throw new NotFoundError(`The Tournament doesn't exist.`);
-      }
-
-      if (tournament.stopDate) {
-        throw new BadRequestError('The tournament has ended.');
-      }
-
-      if (tournament.startDate) {
-        throw new BadRequestError('The tournament was already started.');
-      }
-
-      const result = await tournament.update({startDate: Math.floor(Date.now() / 1000)}, {returning: true});
-      tournament = {
-        id: result.id,
-        startDate: result.startDate,
-        stopDate: result.stopDate,
-        title: result.title
-      };
+      const tournament = await TournamentService.startTournament(id);
       return res.status(200).json({tournament});
     } catch (err) {
       return CommonUtils.catchError(res, err);
@@ -142,27 +69,7 @@ class Tournament {
   static async stop(req, res) {
     const {id} = req.params;
     try {
-      let tournament = await TournamentModel.findById(id);
-
-      if (!tournament) {
-        throw new NotFoundError(`The Tournament doesn't exist.`);
-      }
-
-      if (tournament.stopDate) {
-        throw new BadRequestError('The tournament was already stopped.');
-      }
-
-      if (!tournament.startDate) {
-        throw new BadRequestError(`The tournament wasn't started.`);
-      }
-
-      const result = await tournament.update({stopDate: Math.floor(Date.now() / 1000)}, {returning: true});
-      tournament = {
-        id: result.id,
-        startDate: result.startDate,
-        stopDate: result.stopDate,
-        title: result.title
-      };
+      const tournament = await TournamentService.stopTournament(id);
       return res.status(200).json({tournament});
     } catch (err) {
       return CommonUtils.catchError(res, err);
@@ -173,26 +80,7 @@ class Tournament {
     const tournamentId = req.params.id;
 
     try {
-      const existingTournament = await TournamentModel.findById(tournamentId);
-      if (!existingTournament) {
-        throw new NotFoundError(`The Tournament doesn't exist.`);
-      }
-
-      const teams = await TeamModel.findAll({where: {tournamentId}});
-      const clubIds = teams.map(el => {
-        return el.clubId;
-      });
-
-      const options = {
-        attributes: {
-          exclude: ['updatedAt', 'createdAt', 'deletedAt']
-        }
-      };
-      if (teams.length) {
-        options.where = {id: {$notIn: clubIds}};
-      }
-
-      const clubs = await ClubModel.findAll(options);
+      const clubs = await TournamentService.getClubs(tournamentId);
       return res.status(200).json({clubs});
     } catch (err) {
       return CommonUtils.catchError(res, err);
