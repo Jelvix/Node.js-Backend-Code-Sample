@@ -72,7 +72,7 @@ app.post('/tournaments', Validator.titleValidator, TournamentController.add);
 app.put('/tournaments/:id', Validator.idValidator, Validator.titleValidator, TournamentController.updateById);
 
 /**
- * @api {delete} admin/tournament/:id Remove tournament
+ * @api {delete} /admin/tournaments/:id Remove tournament
  * @apiName RemoveTournament
  * @apiGroup Tournament
  * @apiPermission moderator
