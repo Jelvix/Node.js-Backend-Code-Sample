@@ -27,8 +27,10 @@ const Validator = require('../../utils/validator.js');
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "DB error."
-   *  }
+ *    "reason": "DB error."
+ *  }
+ *
+ *  @apiSampleReques
  */
 app.post('/clubs', Validator.titleValidator, ClubController.add);
 
@@ -57,8 +59,10 @@ app.post('/clubs', Validator.titleValidator, ClubController.add);
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "DB error."
-   *  }
+ *    "reason": "DB error."
+ *  }
+ *
+ *  @apiSampleRequest
  */
 app.get('/clubs', Validator.limitOffsetValidator, ClubController.getList);
 
@@ -88,8 +92,10 @@ app.get('/clubs', Validator.limitOffsetValidator, ClubController.getList);
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "DB error."
-   *  }
+ *    "reason": "DB error."
+ *  }
+ *
+ *  @apiSampleRequest
  */
 app.put('/clubs/:id', Validator.titleValidator, Validator.idValidator, ClubController.update);
 
@@ -113,8 +119,10 @@ app.put('/clubs/:id', Validator.titleValidator, Validator.idValidator, ClubContr
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "DB error."
-   *  }
+ *    "reason": "DB error."
+ *  }
+ *
+ *  @apiSampleRequest
  */
 app.delete('/clubs/:id', Validator.idValidator, ClubController.deleteById);
 

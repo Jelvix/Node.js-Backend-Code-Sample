@@ -1,24 +1,12 @@
 const CommonUtils = require('../../utils/common');
-const {BadRequestError, NotFoundError} = require('../../utils/erros.model.js');
-const ClubModel = require('./club.model.js');
+const ClubService = require('./club.service.js');
 
 class Club {
   static async add(req, res) {
     const title = req.body.title;
 
     try {
-      const existingClub = await ClubModel.find({where: {title}});
-      if (existingClub) {
-        throw new BadRequestError('The club already exist.');
-      }
-
-      let club = await ClubModel.create({title}, {returning: true});
-
-      if (!club) {
-        throw new Error('Cannot create a tournament.');
-      }
-
-      club = {id: club.id, title: club.title};
+      const club = await ClubService.createClub(title);
 
       return res.status(200).json({club});
     } catch (err) {
@@ -27,16 +15,8 @@ class Club {
   }
 
   static async getList(req, res) {
-    let options = {
-      offset: +req.query.offset || 0,
-      limit: +req.query.limit || 30,
-      attributes: {
-        exclude: ['updatedAt', 'createdAt', 'deletedAt']
-      }
-    };
-
     try {
-      const clubs = await ClubModel.findAll(options);
+      const clubs = await ClubService.getClubs(req.query);
 
       return res.status(200).json({clubs});
     } catch (err) {
@@ -49,17 +29,7 @@ class Club {
     const title = req.body.title;
 
     try {
-      let club = await ClubModel.findById(id);
-      if (!club) {
-        throw new NotFoundError(`The club doesn't exist.`);
-      }
-
-      const result = await club.update({title}, {returning: true});
-      if (!result) {
-        throw new Error('Cannot update a club.');
-      }
-
-      club = {id: result.id, title: result.title};
+      const club = await ClubService.updateClub(id, title);
 
       return res.status(200).json({club});
     } catch (err) {
@@ -71,10 +41,7 @@ class Club {
     const id = req.params.id;
 
     try {
-      const club = await ClubModel.destroy({where: {id}});
-      if (!club) {
-        throw new NotFoundError(`Tournament doesn't exist.`);
-      }
+      await ClubService.deleteClub(id);
 
       return res.status(204).send();
     } catch (err) {
