@@ -30,7 +30,8 @@ const Validator = require('../../utils/validator.js');
  *    "reason": "DB error."
  *  }
  *
- *  @apiSampleReques*/
+ *  @apiSampleReques
+ */
 app.post('/clubs', Validator.titleValidator, ClubController.add);
 
 /**
