@@ -19,16 +19,18 @@ const app = require('express')();
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *   user: user
-   *  }
+ *   user: user
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "DB error."
-   *  }
+ *    "reason": "DB error."
+ *  }
+ *
+ *  @apiSampleReques
  */
 app.get('/me/', UserController.getMe);
 
@@ -51,16 +53,18 @@ app.get('/me/', UserController.getMe);
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *   user: user
-   *  }
+ *   user: user
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "DB error."
-   *  }
+ *    "reason": "DB error."
+ *  }
+ *
+ *  @apiSampleReques
  */
 app.put('/me/name', Validator.updateNameValidator, UserController.updateMame);
 
@@ -80,16 +84,18 @@ app.put('/me/name', Validator.updateNameValidator, UserController.updateMame);
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *   reason: password has been updated successfully.
-   *  }
+ *   reason: password has been updated successfully.
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "DB error."
-   *  }
+ *    "reason": "DB error."
+ *  }
+ *
+ *  @apiSampleReques
  */
 app.put('/me/password', Validator.updatePasswordValidator, UserController.updatePassword);
 
@@ -113,16 +119,18 @@ app.put('/me/password', Validator.updatePasswordValidator, UserController.update
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *   user: user
-   *  }
+ *   user: user
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "DB error."
-   *  }
+ *    "reason": "DB error."
+ *  }
+ *
+ *  @apiSampleReques
  */
 app.put('/me/email', Validator.updateEmailValidator, UserController.updateEmail);
 
@@ -153,12 +161,14 @@ app.put('/me/email', Validator.updateEmailValidator, UserController.updateEmail)
  *  {
  *    "reason": "DB error."
  *  }
+ *
+ *  @apiSampleReques
  */
 app.get('/me/statistics', UserController.getMyStatistics);
 
 /**
- * @api {get} /user/:id/statistics Get my statistics
- * @apiName GetMyStatistics
+ * @api {get} /users/:id/statistics Get user statistics
+ * @apiName GetUserStatistics
  * @apiGroup User
  * @apiPermission user
  *
@@ -185,6 +195,8 @@ app.get('/me/statistics', UserController.getMyStatistics);
  *  {
  *    "reason": "DB error."
  *  }
+ *
+ *  @apiSampleReques
  */
 app.get('/users/:id/statistics', Validator.idValidator, UserController.getUserStatistics);
 

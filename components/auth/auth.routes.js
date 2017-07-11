@@ -1,4 +1,5 @@
-const AuthController = require('./../auth/auth.controller.js');
+const AuthController = require('./auth.controller.js');
+const AuthService = require('./auth.service');
 const app = require('express')();
 /**
  * @api {post} /login Login
@@ -14,17 +15,19 @@ const app = require('express')();
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *    "id": "...",
-   *    "api_token": "..."
-   *  }
+ *    "id": "...",
+ *    "api_token": "..."
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "Error db."
-   *  }
+ *    "reason": "Error db."
+ *  }
+ *
+ *  @apiSampleRequest
  */
 app.post('/login', AuthController.loginValidator, AuthController.login);
 
@@ -36,24 +39,27 @@ app.post('/login', AuthController.loginValidator, AuthController.login);
  *
  * @apiParam {String} email Email.
  * @apiParam {String} password Password.
+ * @apiParam {String} name Name.
  *
  * @apiSuccess {Int} id User id.
  * @apiSuccess {Int} api_token Auth token.
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *    "id": "...",
-   *    "api_token": "..."
-   *  }
+ *    "id": "...",
+ *    "api_token": "..."
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "User already exists."
-   *  }
+ *    "reason": "User already exists."
+ *  }
+ *
+ *  @apiSampleRequest
  */
-app.post('/registration', AuthController.registrationValidator, AuthController.registration);
+app.post('/registration', AuthService.registrationValidator, AuthController.registration);
 
 module.exports = app;
