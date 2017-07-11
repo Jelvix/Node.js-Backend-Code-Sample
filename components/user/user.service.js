@@ -13,10 +13,10 @@ class UserService {
     }
   }
 
-  static async getUsers(query) {
+  static async getUsers(offset, limit) {
     const options = {
-      offset: +query.offset || 0,
-      limit: +query.limit || 30,
+      offset: +offset || 0,
+      limit: +limit || 30,
       attributes: {
         exclude: ['updatedAt', 'password', 'createdAt', 'deletedAt']
       }

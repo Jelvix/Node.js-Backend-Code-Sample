@@ -92,7 +92,7 @@ class User {
   static async getList(req, res) {
 
     try {
-      const users = await UserService.getUsers(req.query);
+      const users = await UserService.getUsers(req.query.offset, req.query.limit);
       return res.status(200).json({users});
     } catch (err) {
       return CommonUtils.catchError(res, err);
