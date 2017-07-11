@@ -1,36 +1,13 @@
 const jwt = require('jsonwebtoken');
-const md5 = require('md5');
-const UserModel = require('./../user/user.model.js');
+const AuthService = require('./auth.service');
 const ValidatorUtils = require('../../utils/validator');
 const CommonUtils = require('../../utils/common');
-const {BadRequestError} = require('../../utils/erros.model.js');
 
 class Auth {
-  static async registrationValidator(req, res, next) {
-    req.checkBody('name', 'Name must not be empty.').notEmpty();
-    req.checkBody('email', 'Email is not valid.').notEmpty().isEmail();
-    req.checkBody('password', 'Password is not valid').notEmpty();
-    return await ValidatorUtils.errorMapped(req, res, next);
-  }
-
   static async registration(req, res) {
     const {name, email, password} = req.body;
     try {
-      const existingUser = await UserModel.find({
-        where: {
-          email
-        }
-      });
-      if (existingUser) {
-        throw new BadRequestError('User already exists.');
-      }
-
-      const passwordMd5 = md5(password);
-      const user = await UserModel.create({
-        name,
-        email,
-        password: passwordMd5
-      });
+      const user = await AuthService.createUser({name, email, password});
       return res.json({
         id: user.id,
         token: jwt.sign({email, id: user.id}, process.env.secret)
@@ -47,21 +24,11 @@ class Auth {
   }
 
   static async login(req, res) {
-    const {email, password} = req.body;
-    const passwordMd5 = md5(password);
     try {
-      const user = await UserModel.find({
-        where: {
-          email,
-          password: passwordMd5
-        }
-      });
-      if (!user) {
-        throw new Error('Missing or invalid authentication credentials.');
-      }
+      const user = await AuthService.getUserByCredentials(req.body);
       return res.json({
         id: user.id,
-        token: jwt.sign({id: user.id, email}, process.env.secret)
+        token: jwt.sign({id: user.id, email: user.email}, process.env.secret)
       });
     } catch (err) {
       return CommonUtils.catchError(res, err);
@@ -79,12 +46,7 @@ class Auth {
             });
           }
 
-          req.user = await UserModel.findById(decoded.id, {
-            attributes: {
-              exclude: ['createdAt', 'updatedAt', 'deletedAt']
-            },
-            raw: true
-          });
+          req.user = await AuthService.getUserById(decoded.id);
 
           if (!req.user) {
             return res.status(401).json({

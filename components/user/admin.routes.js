@@ -22,21 +22,23 @@ const app = require('express')();
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *    "users": [user]
-   *  }
+ *    "users": [user]
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "DB error."
-   *  }
+ *    "reason": "DB error."
+ *  }
+ *
+ *  @apiSampleReques
  */
 app.get('/users', Validator.limitOffsetValidator, UserController.getList);
 
 /**
- * @api {get} /users/:id Get user
+ * @api {get} /admin/users/:id Get user
  * @apiName GetUser
  * @apiGroup User
  * @apiPermission admin
@@ -54,16 +56,18 @@ app.get('/users', Validator.limitOffsetValidator, UserController.getList);
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *    "user": user
-   *  }
+ *    "user": user
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "DB error."
-   *  }
+ *    "reason": "DB error."
+ *  }
+ *
+ *  @apiSampleReques
  */
 app.get('/users/:id', Validator.idValidator, UserController.getOneById);
 
@@ -85,8 +89,10 @@ app.get('/users/:id', Validator.idValidator, UserController.getOneById);
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "DB error."
-   *  }
+ *    "reason": "DB error."
+ *  }
+ *
+ *  @apiSampleReques
  */
 app.delete('/users/:id', Validator.idValidator, UserController.deleteById);
 
@@ -113,16 +119,18 @@ app.delete('/users/:id', Validator.idValidator, UserController.deleteById);
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *   user: user
-   *  }
+ *   user: user
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "DB error."
-   *  }
+ *    "reason": "DB error."
+ *  }
+ *
+ *  @apiSampleReques
  */
 app.put('/users/:id', Validator.updateUserValidator, UserController.updateUser);
 
@@ -141,16 +149,18 @@ app.put('/users/:id', Validator.updateUserValidator, UserController.updateUser);
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {
-   *    "id": 10
-   *  }
+ *    "id": 10
+ *  }
  *
  * @apiError {String} reason Error reason.
  *
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 400 Bad Request
  *  {
-   *    "reason": "User don't exists."
-   *  }
+ *    "reason": "User don't exists."
+ *  }
+ *
+ *  @apiSampleReques
  */
 
 module.exports = app;
