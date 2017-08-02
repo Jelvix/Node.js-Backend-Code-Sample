@@ -1,11 +1,22 @@
 const jwt = require('jsonwebtoken');
-const md5 = require('md5');
-
-const UserModel = require('./user.model');
+const AuthService = require('./auth.service');
 const ValidatorUtils = require('../../utils/validator');
 const CommonUtils = require('../../utils/common');
 
 class Auth {
+  static async registration(req, res) {
+    const {name, email, password} = req.body;
+    try {
+      const user = await AuthService.createUser({name, email, password});
+      return res.json({
+        id: user.id,
+        token: jwt.sign({email, id: user.id}, process.env.secret)
+      });
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
   static async loginValidator(req, res, next) {
     req.checkBody('email', 'Email not valid.').notEmpty().isEmail();
     req.checkBody('password', 'Password not valid').notEmpty();
@@ -13,31 +24,20 @@ class Auth {
   }
 
   static async login(req, res) {
-    const {email, password} = req.body;
-    const passwordMd5 = md5(password);
     try {
-      const user = await UserModel.find({
-        where: {
-          email,
-          password: passwordMd5
-        }
-      });
-      if (!user) {
-        throw new Error('Missing or invalid authentication credentials.');
-      }
+      const user = await AuthService.getUserByCredentials(req.body);
       return res.json({
         id: user.id,
-        token: jwt.sign({email, password: passwordMd5}, process.env.secret)
+        token: jwt.sign({id: user.id, email: user.email}, process.env.secret)
       });
     } catch (err) {
       return CommonUtils.catchError(res, err);
     }
   }
 
-  static authValidator(role = 0) {
+  static authValidator(role) {
     return async (req, res, next) => {
-      let token = req.body.token || req.query.token || req.headers['x-auth-token'];
-
+      const token = req.body.token || req.query.token || req.headers['x-auth-token'];
       if (token) {
         return jwt.verify(token, process.env.secret, async (err, decoded) => {
           if (err) {
@@ -46,11 +46,7 @@ class Auth {
             });
           }
 
-          req.user = await UserModel.find({
-            when: {
-              id: decoded._id
-            }
-          });
+          req.user = await AuthService.getUserById(decoded.id);
 
           if (!req.user) {
             return res.status(401).json({
@@ -71,7 +67,7 @@ class Auth {
       return res.status(400).json({
         reason: 'No token provided.'
       });
-    }
+    };
   }
 }
 

@@ -1,30 +1,21 @@
 const Sequelize = require('sequelize');
 const db = require('../../config/db');
 
-const Tournament = db.define('tournament', {
+const model = db.define('tournament', {
   title: {
     type: Sequelize.STRING
   },
-  createdAt: {
+  startDate: {
     type: Sequelize.INTEGER,
-    defaultValue: (Date.now() / 1000)
+    defaultValue: null
   },
-  scored: {
+  stopDate: {
     type: Sequelize.INTEGER,
-    defaultValue: 0
-  },
-  missing: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0
-  },
-  games: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0
-  },
-  points: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0
+    defaultValue: null
   }
-});
+}, {paranoid: true});
 
-module.exports = Tournament;
+model.hasMany(db.models.match);
+model.hasMany(db.models.team);
+
+module.exports = model;

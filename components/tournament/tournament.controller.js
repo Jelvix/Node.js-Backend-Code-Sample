@@ -1,71 +1,87 @@
-const ValidatorUtils = require('../../utils/validator');
 const CommonUtils = require('../../utils/common');
-const TournamentModel = require('./tournament.model');
+const TournamentService = require('./tournament.service');
 
 class Tournament {
-  static async addValidator(req, res, next) {
-    req.checkBody('title', 'Title not valid.').notEmpty();
-    return await ValidatorUtils.errorMapped(req, res, next);
-  }
-
   static async add(req, res) {
     const title = req.body.title;
     try {
-      const userOld = await TournamentModel.find({
-        where: {
-          title
-        }
-      });
-      if (userOld) {
-        throw new Error('Tournament already exists.')
-      }
-      const tournament = await TournamentModel.create({
-        title
-      });
-      return res.status(200).json({
-        tournament,
-      });
+      const tournament = await TournamentService.createTournament({title});
+
+      return res.status(201).json({tournament});
     } catch (err) {
       return CommonUtils.catchError(res, err);
     }
-  }
-
-  static async deleteValidator(req, res, next) {
-    req.checkBody('id', 'Id not valid.').notEmpty().isInt();
-    return await ValidatorUtils.errorMapped(req, res, next);
   }
 
   static async deleteById(req, res) {
-    const {id} = req.body;
+    const {id} = req.params;
     try {
-      await TournamentModel.destroy({
-        where: {
-          id
-        }
-      });
-      return res.status(200).send();
+      await TournamentService.deleteTournament(id);
+      return res.status(204).send();
     } catch (err) {
       return CommonUtils.catchError(res, err);
     }
   }
 
-  static async getTournaments(req, res) {
-    let options = {
-      offset: +req.query.offset || 0,
-      limit: +req.query.limit || 30,
-      attributes : {
-        exclude: ['updatedAt']
-      }
-    };
-
-    if (isNaN(options.offset) || isNaN(options.limit)) {
-      return res.status(400).json({
-        reason: 'Invalid request options.'
-      });
-    }
+  static async getById(req, res) {
+    const tournamentId = req.params.id;
+    const userId = req.user.id;
     try {
-      const tournaments = await TournamentModel.findAll(options);
+      const ids = {tournamentId, userId};
+      const tournament = await TournamentService.getTournamentInfo(ids);
+
+      return res.status(200).json({tournament});
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
+  static async updateById(req, res) {
+    const {id} = req.params;
+    const {title} = req.body;
+    try {
+      const tournament = await TournamentService.updateTournament(id, {title});
+      return res.status(200).json({tournament});
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
+  static async getList(req, res) {
+    try {
+      const tournaments = await TournamentService.getAllTournaments(req.query);
       return res.status(200).json({tournaments});
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
+  static async start(req, res) {
+    const {id} = req.params;
+    try {
+      const tournament = await TournamentService.startTournament(id);
+      return res.status(200).json({tournament});
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
+  static async stop(req, res) {
+    const {id} = req.params;
+    try {
+      const tournament = await TournamentService.stopTournament(id);
+      return res.status(200).json({tournament});
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
+  static async getAvailableClubs(req, res) {
+    const tournamentId = req.params.id;
+
+    try {
+      const clubs = await TournamentService.getClubs(tournamentId);
+      return res.status(200).json({clubs});
     } catch (err) {
       return CommonUtils.catchError(res, err);
     }

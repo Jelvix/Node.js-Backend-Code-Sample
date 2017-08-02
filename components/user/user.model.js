@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../../config/db');
 
-const User = db.define('user', {
+module.exports = db.define('user', {
   name: {
     type: Sequelize.STRING
   },
@@ -15,6 +15,5 @@ const User = db.define('user', {
     type: Sequelize.INTEGER,
     defaultValue: 0
   }
-});
+}, {paranoid: true});
 
-module.exports = User;

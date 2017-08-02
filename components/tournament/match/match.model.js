@@ -1,11 +1,7 @@
 const Sequelize = require('sequelize');
-const db = require('../../config/db');
+const db = require('../../../config/db');
 
-const Match = db.define('match', {
-  createdAt: {
-    type: Sequelize.INTEGER,
-    defaultValue: (Date.now() / 1000)
-  },
+module.exports = db.define('match', {
   tournamentId: {
     type: Sequelize.INTEGER
   },
@@ -20,7 +16,5 @@ const Match = db.define('match', {
   },
   awayScored: {
     type: Sequelize.INTEGER
-  },
-});
-
-module.exports = Match;
+  }
+}, {paranoid: true});

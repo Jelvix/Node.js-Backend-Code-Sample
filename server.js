@@ -16,4 +16,4 @@ app.use(cors());
 
 router(app);
 const port = process.env.port || 3000;
-app.listen(port, () => console.log(`Run to port ${port}`));
+app.listen(port, () => console.log(`Run on port ${port}`));

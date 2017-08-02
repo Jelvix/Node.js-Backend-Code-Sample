@@ -1,56 +1,125 @@
-const jwt = require('jsonwebtoken');
 const md5 = require('md5');
-
-const UserModel = require('./user.model');
-const ValidatorUtils = require('../../utils/validator');
+const UserService = require('./user.service');
 const CommonUtils = require('../../utils/common');
 
 class User {
-  static async registrationValidator(req, res, next) {
-    req.checkBody('name', 'Name not be empty.').notEmpty();
-    req.checkBody('email', 'Email not valid.').notEmpty().isEmail();
-    req.checkBody('password', 'Password not valid').notEmpty();
-    return await ValidatorUtils.errorMapped(req, res, next);
+  static async deleteById(req, res) {
+    const {id} = req.params;
+    try {
+      await UserService.deleteUser(id);
+
+      return res.status(204).send();
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
+
+  static async getOneById(req, res) {
+    const {id} = req.params;
+    try {
+      const user = await UserService.getUserById(id);
+
+      return res.status(200).json({user});
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
+  static getMe(req, res) {
+    const user = req.user;
+    delete user.password;
+    return res.status(200).json({user});
+  }
+
+  static async updateUser(req, res) {
+    const {id} = req.params;
+    const {name, email, role} = req.body;
+    try {
+      await UserService.checkExistingEmail(id, email);
+      const user = await UserService.updateUser(id, {name, email, role});
+
+      return res.status(200).json({user});
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
+  static async updateEmail(req, res) {
+    const {email, password} = req.body;
+    const id = req.user.id;
+
+    try {
+      await UserService.checkExistingEmail(id, email);
+      UserService.comparePasswords(req.user.password, password);
+      const user = await UserService.updateUser(id, {email});
+
+      return res.status(200).json({user});
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
+  static async updateMame(req, res) {
+    const name = req.body.name;
+    const id = req.user.id;
+    try {
+      const user = await UserService.updateUser(id, {name});
+
+      return res.status(200).json({user});
+    }
+    catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
+  static async updatePassword(req, res) {
+    const {newPassword, oldPassword} = req.body;
+    const id = req.user.id;
+
+    try {
+      UserService.comparePasswords(req.user.password, oldPassword);
+
+      const newPasswordMd5 = md5(newPassword);
+      await UserService.updateUser(id, {password: newPasswordMd5});
+
+      return res.status(204).json();
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
   }
 
   static async getList(req, res) {
-    const options = {
-      offset: +req.query.offset || 0,
-      limit: +req.query.limit || 30,
-      attributes: {
-        exclude: ['updatedAt', 'password']
-      }
-    };
 
     try {
-      const users = await UserModel.findAll(options);
+      const users = await UserService.getUsers(req.query.offset, req.query.limit);
       return res.status(200).json({users});
     } catch (err) {
       return CommonUtils.catchError(res, err);
     }
   }
 
-  static async registration(req, res) {
-    const {name, email, password} = req.body;
-    const passwordMd5 = md5(password);
+  static async getMyStatistics(req, res) {
+    const userId = req.user.id;
+
     try {
-      const userOld = await UserModel.find({
-        where: {
-          email
-        }
-      });
-      if (userOld) {
-        throw new Error('User already exists.');
-      }
-      const user = await UserModel.create({
-        name,
-        email,
-        password: passwordMd5
-      });
-      return res.json({
-        id: user.id,
-        token: jwt.sign({email, name, password: passwordMd5}, process.env.secret)
-      });
+      const statistics = await UserService.getStatistics(userId);
+
+      return res.status(200).json({statistics});
+    } catch (err) {
+      return CommonUtils.catchError(res, err);
+    }
+  }
+
+  static async getUserStatistics(req, res) {
+    const userId = req.params.id;
+
+    try {
+      await UserService.checkIfUserExist(userId);
+
+      const statistics = await UserService.getStatistics(userId);
+
+      return res.status(200).json({statistics});
     } catch (err) {
       return CommonUtils.catchError(res, err);
     }
