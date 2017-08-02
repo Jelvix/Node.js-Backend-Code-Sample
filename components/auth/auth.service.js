@@ -38,7 +38,7 @@ class AuthService {
       }
     });
     if (!user) {
-      throw new Error('Missing or invalid authentication credentials.');
+      throw new BadRequestError('Missing or invalid authentication credentials.');
     }
 
     return user;
