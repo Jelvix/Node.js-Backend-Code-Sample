@@ -8,14 +8,14 @@ Using express.js (https://expressjs.com) and postgreSQL (https://www.postgresql.
  tournaments including both for client application and admin panel.
 ###Note: FOR CODE DEMONSTRATION ONLY.
 
-###Start dev mode:
+###Start development mode:
 npm start
 
-###Staging build:
+###Staging build: 
 npm run build:stage
 
-###Prod build:
+###Production build:
 npm run build:prod
 
-###Generate doc:
+###Generate documentation:
 npm run doc
