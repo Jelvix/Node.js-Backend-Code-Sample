@@ -1,24 +1,24 @@
-#FIFA REST API
+# FIFA REST API
 
 This project was created in order to show programming skills of JavaScript developers from Jelvix.
 
-##TASK:
+## TASK:
 Using express.js (https://expressjs.com) and postgreSQL (https://www.postgresql.org)
  we had to create REST API for fifa players witch provides functionality to create and browse fifa
  tournaments including both for client application and admin panel.
-###Note: FOR CODE DEMONSTRATION ONLY.
-
-###Install dependencies:
+### Note: FOR CODE DEMONSTRATION ONLY.
+ 
+### Install dependencies:
 npm i
 
-###Start development mode:
+### Start development mode:
 npm start
 
-###Staging build: 
+### Staging build: 
 npm run build:stage
 
-###Production build:
+### Production build:
 npm run build:prod
 
-###Generate documentation:
+### Generate documentation:
 npm run doc
