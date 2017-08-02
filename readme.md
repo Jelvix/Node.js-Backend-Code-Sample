@@ -8,6 +8,9 @@ Using express.js (https://expressjs.com) and postgreSQL (https://www.postgresql.
  tournaments including both for client application and admin panel.
 ###Note: FOR CODE DEMONSTRATION ONLY.
 
+###Install dependencies:
+npm i
+
 ###Start development mode:
 npm start
 
