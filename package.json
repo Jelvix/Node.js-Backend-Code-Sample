@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "repository": {},
-  "license": "MIT",
+  "license": "Jelvix Team",
   "scripts": {
     "start": "better-npm-run build:dev",
     "build:stage": "better-npm-run build:stage",
