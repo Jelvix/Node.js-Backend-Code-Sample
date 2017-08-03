@@ -8,18 +8,18 @@ Using express.js (https://expressjs.com) and postgreSQL (https://www.postgresql.
  tournaments including both for client application and admin panel.
  
 ### Install dependencies:
-npm i
+`npm i`
 
 ### Start development mode:
-npm start
+`npm start`
 
 ### Staging build: 
-npm run build:stage
+`npm run build:stage`
 
 ### Production build:
-npm run build:prod
+`npm run build:prod`
 
 ### Generate documentation:
-npm run doc
+`npm run doc`
 
 ### Note: FOR CODE DEMONSTRATION ONLY.
